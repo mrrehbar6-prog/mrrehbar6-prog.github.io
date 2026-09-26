@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "io.github.mrrehbar6_prog.twa",
+    "sha256_cert_fingerprints": [
+      "EB:A8:9C:DE:51:3A:20:DF:92:A6:AD:4E:F5:D9:00:54:45:EE:FE:30:BC:02:64:54:A3:19:1C:BF:5C:69:08:15"
+    ]
+  }
+}]
