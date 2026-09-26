@@ -4,495 +4,656 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Habit Tracker</title>
-<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#17161a">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
 
 <style>
-  :root{
-    --bg:#17161a;
-    --panel:#1f1e22;
-    --line:#4a464c;
-    --ink:#f2ede6;
-    --ink-dim:#9a959a;
-    --red:#e0342f;
-    box-sizing:border-box;
-    padding-top:env(safe-area-inset-top,0px);
-    padding-bottom:env(safe-area-inset-bottom,0px);
-  }
-  *{box-sizing:border-box;}
-  html{height:100%;}
-  body{
-    height:100%;
-    margin:0;
-    background:var(--bg);
-    color:var(--ink);
-    font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
-  }
-  .wrap{
-    max-width:520px;
-    margin:0 auto;
-    padding:24px 18px 60px;
-  }
-  .field{
-    background:none;
-    border:none;
-    border-bottom:2px solid var(--line);
-    color:var(--ink);
-    font:inherit;
-    outline:none;
-    padding:4px 0;
-    width:100%;
-  }
-  .field:focus{border-bottom-color:var(--red);}
-  h1 input{
-    font-size:30px;
-    font-weight:700;
-    margin-bottom:14px;
-  }
-  .row{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    color:var(--ink-dim);
-    font-size:15px;
-    margin-bottom:22px;
-    position:relative;
-  }
-  .row input{
-    width:44px;
-    font-size:15px;
-    color:var(--ink-dim);
-  }
+:root{
+  --bg:#17161a;
+  --panel:#211f24;
+  --line:#49454b;
+  --text:#f2ede6;
+  --dim:#9b969b;
+  --red:#e0342f;
+}
 
-  /* custom month picker */
-  .month-picker{position:relative;}
-  .month-btn{
-    background:none;
-    border:none;
-    border-bottom:2px solid var(--line);
-    color:var(--ink);
-    font:inherit;
-    font-size:15px;
-    padding:4px 22px 4px 0;
-    cursor:pointer;
-    position:relative;
-  }
-  .month-btn::after{
-    content:'';
-    position:absolute;
-    right:2px;
-    top:50%;
-    width:7px;
-    height:7px;
-    border-right:2px solid var(--ink-dim);
-    border-bottom:2px solid var(--ink-dim);
-    transform:translateY(-70%) rotate(45deg);
-    transition:transform .2s ease;
-  }
-  .month-btn.open::after{ transform:translateY(-30%) rotate(-135deg); }
-  .month-btn.open{border-bottom-color:var(--red);}
+*{
+  box-sizing:border-box;
+}
 
-  .month-dropdown{
-    position:absolute;
-    top:calc(100% + 8px);
-    left:0;
-    width:180px;
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:8px;
-    box-shadow:0 12px 28px -8px rgba(0,0,0,0.5);
-    max-height:0;
-    opacity:0;
-    overflow:hidden;
-    transform:translateY(-6px);
-    transition:max-height .28s ease, opacity .2s ease, transform .22s ease;
-    z-index:20;
-  }
-  .month-dropdown.open{
-    max-height:320px;
-    opacity:1;
-    transform:translateY(0);
-    overflow-y:auto;
-  }
-  .month-option{
-    padding:10px 14px;
-    font-size:14px;
-    color:var(--ink-dim);
-    cursor:pointer;
-    transition:background .12s ease, color .12s ease, padding-left .12s ease;
-  }
-  .month-option:hover, .month-option:active{
-    background:rgba(224,52,47,0.12);
-    color:var(--ink);
-    padding-left:18px;
-  }
-  .month-option.selected{
-    color:var(--red);
-    font-weight:600;
-  }
+html,body{
+  margin:0;
+  min-height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+}
 
-  .count{
-    font-size:16px;
-    margin-bottom:16px;
-  }
-  .count b{color:var(--red); font-size:20px;}
+button,input{
+  font:inherit;
+}
 
+body{
+  padding-top:env(safe-area-inset-top);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+
+.app{
+  max-width:560px;
+  margin:auto;
+  padding:24px 18px 60px;
+}
+
+/* HOME */
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:28px;
+}
+
+.title{
+  font-size:30px;
+  font-weight:700;
+  margin:0;
+}
+
+.add-btn{
+  width:48px;
+  height:48px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--panel);
+  color:var(--text);
+  font-size:30px;
+  line-height:1;
+  cursor:pointer;
+}
+
+.habit-list{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.habit-card{
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--panel);
+  padding:18px;
+  cursor:pointer;
+  transition:.12s;
+}
+
+.habit-card:active{
+  transform:scale(.98);
+}
+
+.habit-card-title{
+  font-size:20px;
+  font-weight:600;
+}
+
+.habit-card-info{
+  margin-top:8px;
+  color:var(--dim);
+  font-size:14px;
+}
+
+.empty{
+  color:var(--dim);
+  text-align:center;
+  padding:60px 20px;
+}
+
+/* TRACKER */
+
+.back{
+  background:none;
+  border:none;
+  color:var(--dim);
+  padding:0;
+  font-size:15px;
+  margin-bottom:24px;
+  cursor:pointer;
+}
+
+.habit-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:24px;
+}
+
+.habit-title input{
+  flex:1;
+  min-width:0;
+  background:none;
+  border:none;
+  border-bottom:2px solid var(--line);
+  outline:none;
+  color:var(--text);
+  font-size:30px;
+  font-weight:700;
+  padding:4px 0;
+}
+
+.habit-title input:focus{
+  border-bottom-color:var(--red);
+}
+
+.delete-btn{
+  border:none;
+  background:none;
+  color:var(--dim);
+  font-size:13px;
+  text-decoration:underline;
+}
+
+.days-setting{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:var(--dim);
+  font-size:15px;
+  margin-bottom:22px;
+}
+
+.days-setting input{
+  width:80px;
+  background:none;
+  border:none;
+  border-bottom:2px solid var(--line);
+  color:var(--text);
+  outline:none;
+  padding:4px;
+  text-align:center;
+}
+
+.days-setting input:focus{
+  border-bottom-color:var(--red);
+}
+
+.count{
+  font-size:16px;
+  margin-bottom:16px;
+}
+
+.count b{
+  color:var(--red);
+  font-size:21px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:8px;
+  margin-bottom:28px;
+}
+
+.cell{
+  aspect-ratio:1;
+  border:2px solid var(--line);
+  border-radius:7px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:var(--dim);
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  user-select:none;
+  transition:.1s;
+}
+
+.cell:active{
+  transform:scale(.9);
+}
+
+.cell.done{
+  background:var(--red);
+  border-color:var(--red);
+  color:white;
+}
+
+.reset-btn{
+  background:none;
+  border:1px solid var(--line);
+  color:var(--dim);
+  border-radius:7px;
+  padding:9px 14px;
+  font-size:13px;
+}
+
+/* ADD HABIT */
+
+.form-title{
+  font-size:30px;
+  font-weight:700;
+  margin-bottom:30px;
+}
+
+.form input{
+  width:100%;
+  background:none;
+  border:none;
+  border-bottom:2px solid var(--line);
+  color:var(--text);
+  outline:none;
+  padding:10px 0;
+  font-size:18px;
+  margin-bottom:28px;
+}
+
+.form input:focus{
+  border-bottom-color:var(--red);
+}
+
+.create-btn{
+  width:100%;
+  border:none;
+  border-radius:10px;
+  padding:14px;
+  background:var(--red);
+  color:white;
+  font-weight:600;
+}
+
+.cancel-btn{
+  width:100%;
+  margin-top:12px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:13px;
+  background:none;
+  color:var(--dim);
+}
+
+/* DESKTOP */
+
+@media(min-width:600px){
   .grid{
-    display:grid;
-    grid-template-columns:repeat(6,1fr);
-    gap:8px;
-    margin-bottom:24px;
+    gap:10px;
   }
-  .cell{
-    aspect-ratio:1/1;
-    border:2px solid var(--line);
-    border-radius:6px;
-    background:transparent;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:15px;
-    font-weight:600;
-    color:var(--ink-dim);
-    cursor:pointer;
-    user-select:none;
-    transition:transform .1s ease, background .12s ease, border-color .12s ease;
-  }
-  .cell:active{transform:scale(0.9);}
-  .cell.done{
-    background:var(--red);
-    border-color:var(--red);
-    color:#fff;
-  }
-
-  .history-toggle{
-    background:none;
-    border:1px solid var(--line);
-    color:var(--ink-dim);
-    font-size:13px;
-    padding:8px 14px;
-    border-radius:6px;
-  }
-
-  .history{
-    margin-top:18px;
-    padding-top:16px;
-    border-top:1px solid var(--line);
-    display:none;
-  }
-  .history.open{display:block;}
-  .history h2{
-    font-size:14px;
-    font-weight:600;
-    color:var(--ink-dim);
-    margin:0 0 10px;
-  }
-  .history-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:8px 0;
-    border-bottom:1px solid var(--line);
-    font-size:14px;
-  }
-  .history-row:last-child{border-bottom:none;}
-  .history-row .m{color:var(--ink);}
-  .history-row .right{display:flex; align-items:center; gap:12px;}
-  .history-row .c{color:var(--red); font-weight:600;}
-  .history-row .clear{
-    background:none;
-    border:none;
-    color:var(--ink-dim);
-    font-size:12px;
-    text-decoration:underline;
-    padding:0;
-  }
-  .history-row .clear.confirming{
-    color:var(--red);
-    font-weight:600;
-  }
-  .history-empty{color:var(--ink-dim); font-size:14px;}
-
-  @media (prefers-color-scheme: light){
-    :root:not([data-theme="dark"]){
-      --bg:#faf8f5;
-      --panel:#ffffff;
-      --line:#d9d4cc;
-      --ink:#201d1a;
-      --ink-dim:#8a837a;
-      --red:#d62828;
-    }
-  }
+}
 </style>
 </head>
+
 <body>
-<div class="wrap">
-  <h1><input class="field" id="habitName" maxlength="24" value="Gym"></h1>
-  <div class="row">
-    <div class="month-picker">
-      <button class="month-btn" id="monthBtn" type="button">January</button>
-      <div class="month-dropdown" id="monthDropdown"></div>
-    </div>
-    <span>&middot;</span>
-    <input class="field" id="totalDays" maxlength="2" inputmode="numeric" value="30">
-    <span>days</span>
-  </div>
 
-  <div class="count"><b id="doneCount">0</b> / <span id="totalShow">30</span> days done</div>
-
-  <div class="grid" id="grid"></div>
-
-  <button class="history-toggle" id="historyBtn">View history</button>
-
-  <div class="history" id="historyBox">
-    <h2>Days done per month</h2>
-    <div id="historyList"></div>
-  </div>
-</div>
+<div class="app" id="app"></div>
 
 <script>
 (function(){
-  const STORE_KEY = 'habit_tracker_v2';
-  const grid = document.getElementById('grid');
-  const habitInput = document.getElementById('habitName');
-  const monthBtn = document.getElementById('monthBtn');
-  const monthDropdown = document.getElementById('monthDropdown');
-  const totalInput = document.getElementById('totalDays');
-  const doneCountEl = document.getElementById('doneCount');
-  const totalShowEl = document.getElementById('totalShow');
-  const historyBtn = document.getElementById('historyBtn');
-  const historyBox = document.getElementById('historyBox');
-  const historyList = document.getElementById('historyList');
 
-  const monthNamesFull = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const STORAGE_KEY = "habit_tracker_multi_v1";
 
-  function daysInMonthFor(name){
-    const now = new Date();
-    const idx = monthNamesFull.indexOf(name);
-    if(idx === -1) return 30;
-    return new Date(now.getFullYear(), idx+1, 0).getDate();
+let data = loadData();
+
+function loadData(){
+  try{
+    const saved = localStorage.getItem(STORAGE_KEY);
+
+    if(saved){
+      const parsed = JSON.parse(saved);
+
+      if(parsed && Array.isArray(parsed.habits)){
+        return parsed;
+      }
+    }
+  }catch(e){}
+
+  return {
+    habits:[
+      {
+        id:makeId(),
+        name:"Gym",
+        total:30,
+        done:{}
+      }
+    ]
+  };
+}
+
+function saveData(){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+}
+
+function makeId(){
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+
+function escapeHTML(text){
+  return String(text)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function getHabit(id){
+  return data.habits.find(h => h.id === id);
+}
+
+function countDone(habit){
+  return Object.keys(habit.done || {}).filter(day=>{
+    return habit.done[day] === true &&
+           Number(day) <= habit.total;
+  }).length;
+}
+
+/* HOME */
+
+function renderHome(){
+
+  app.innerHTML = `
+    <div class="header">
+      <h1 class="title">My Habits</h1>
+      <button class="add-btn" id="addHabit">+</button>
+    </div>
+
+    <div class="habit-list" id="habitList"></div>
+  `;
+
+  const list = document.getElementById("habitList");
+
+  if(data.habits.length === 0){
+
+    list.innerHTML = `
+      <div class="empty">
+        No habits yet.<br>
+        Tap + to create your first habit.
+      </div>
+    `;
+
+  }else{
+
+    data.habits.forEach(habit=>{
+
+      const done = countDone(habit);
+
+      const card = document.createElement("div");
+      card.className = "habit-card";
+
+      card.innerHTML = `
+        <div class="habit-card-title">
+          ${escapeHTML(habit.name)}
+        </div>
+
+        <div class="habit-card-info">
+          ${done} / ${habit.total} days done
+        </div>
+      `;
+
+      card.addEventListener("click",()=>{
+        renderTracker(habit.id);
+      });
+
+      list.appendChild(card);
+    });
   }
 
-  function defaultState(){
-    const now = new Date();
-    const curMonth = monthNamesFull[now.getMonth()];
-    const months = {};
-    months[curMonth] = { total: daysInMonthFor(curMonth), done:{} };
-    return { habit:"Gym", currentMonth: curMonth, months: months };
-  }
+  document.getElementById("addHabit")
+    .addEventListener("click",renderAddHabit);
+}
 
-  function migrateOld(){
-    try{
-      const raw = localStorage.getItem('habit_tracker_simple_v1') || localStorage.getItem('habit_challenge_v1');
-      if(!raw) return null;
-      const p = JSON.parse(raw);
-      if(!p || !p.month) return null;
-      const monthName = monthNamesFull.includes(p.month) ? p.month : monthNamesFull[new Date().getMonth()];
-      const months = {};
-      months[monthName] = { total: p.total || daysInMonthFor(monthName), done: p.done || {} };
-      return { habit: p.habit || 'Gym', currentMonth: monthName, months: months };
-    }catch(e){ return null; }
-  }
 
-  function load(){
-    try{
-      const raw = localStorage.getItem(STORE_KEY);
-      if(!raw) return migrateOld() || defaultState();
-      const p = JSON.parse(raw);
-      const d = defaultState();
-      if(!p || typeof p !== 'object' || !p.months) return d;
-      return {
-        habit: typeof p.habit==='string' ? p.habit : d.habit,
-        currentMonth: monthNamesFull.includes(p.currentMonth) ? p.currentMonth : d.currentMonth,
-        months: (p.months && typeof p.months==='object') ? p.months : d.months
+/* ADD HABIT */
+
+function renderAddHabit(){
+
+  app.innerHTML = `
+    <button class="back" id="cancelTop">← Back</button>
+
+    <div class="form-title">
+      New Habit
+    </div>
+
+    <div class="form">
+
+      <input
+        id="newName"
+        maxlength="40"
+        placeholder="Habit name"
+        autocomplete="off"
+      >
+
+      <input
+        id="newDays"
+        type="number"
+        min="1"
+        max="9999"
+        value="30"
+        placeholder="Number of days"
+      >
+
+      <button class="create-btn" id="createHabit">
+        Create Habit
+      </button>
+
+      <button class="cancel-btn" id="cancelHabit">
+        Cancel
+      </button>
+
+    </div>
+  `;
+
+  document.getElementById("cancelTop")
+    .addEventListener("click",renderHome);
+
+  document.getElementById("cancelHabit")
+    .addEventListener("click",renderHome);
+
+  document.getElementById("createHabit")
+    .addEventListener("click",()=>{
+
+      const nameInput = document.getElementById("newName");
+      const daysInput = document.getElementById("newDays");
+
+      const name = nameInput.value.trim() || "Habit";
+
+      let total = parseInt(daysInput.value,10);
+
+      if(!Number.isFinite(total) || total < 1){
+        total = 30;
+      }
+
+      total = Math.min(9999,total);
+
+      const habit = {
+        id:makeId(),
+        name:name,
+        total:total,
+        done:{}
       };
-    }catch(e){ return defaultState(); }
-  }
 
-  let state = load();
+      data.habits.push(habit);
 
-  function save(){
-    try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
-  }
-  function clampTotal(n){
-    if(!Number.isFinite(n)) return 30;
-    return Math.min(31, Math.max(1, Math.round(n)));
-  }
+      saveData();
 
-  function currentMonthData(){
-    if(!state.months[state.currentMonth]){
-      state.months[state.currentMonth] = { total: daysInMonthFor(state.currentMonth), done:{} };
-    }
-    return state.months[state.currentMonth];
-  }
-
-  function populateMonthDropdown(){
-    monthDropdown.innerHTML = '';
-    monthNamesFull.forEach(m=>{
-      const opt = document.createElement('div');
-      opt.className = 'month-option' + (m === state.currentMonth ? ' selected' : '');
-      opt.textContent = m;
-      opt.addEventListener('click', ()=>{
-        state.currentMonth = m;
-        save();
-        monthBtn.textContent = m;
-        closeMonthDropdown();
-        renderGrid();
-        if(historyBox.classList.contains('open')) renderHistory();
-      });
-      monthDropdown.appendChild(opt);
+      renderTracker(habit.id);
     });
+
+  setTimeout(()=>{
+    document.getElementById("newName").focus();
+  },50);
+}
+
+
+/* TRACKER */
+
+function renderTracker(id){
+
+  const habit = getHabit(id);
+
+  if(!habit){
+    renderHome();
+    return;
   }
 
-  function openMonthDropdown(){
-    monthDropdown.classList.add('open');
-    monthBtn.classList.add('open');
-  }
-  function closeMonthDropdown(){
-    monthDropdown.classList.remove('open');
-    monthBtn.classList.remove('open');
-  }
+  app.innerHTML = `
 
-  monthBtn.addEventListener('click', (ev)=>{
-    ev.stopPropagation();
-    if(monthDropdown.classList.contains('open')) closeMonthDropdown();
-    else openMonthDropdown();
+    <button class="back" id="backHome">
+      ← All Habits
+    </button>
+
+    <div class="habit-title">
+
+      <input
+        id="habitName"
+        value="${escapeHTML(habit.name)}"
+        maxlength="40"
+      >
+
+      <button class="delete-btn" id="deleteHabit">
+        Delete
+      </button>
+
+    </div>
+
+    <div class="days-setting">
+
+      <span>Days:</span>
+
+      <input
+        id="totalDays"
+        type="number"
+        min="1"
+        max="9999"
+        value="${habit.total}"
+      >
+
+    </div>
+
+    <div class="count">
+      <b id="doneCount">${countDone(habit)}</b>
+      /
+      <span id="totalCount">${habit.total}</span>
+      days done
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+    <button class="reset-btn" id="resetBtn">
+      Reset completed days
+    </button>
+  `;
+
+  document.getElementById("backHome")
+    .addEventListener("click",renderHome);
+
+  const nameInput = document.getElementById("habitName");
+
+  nameInput.addEventListener("input",()=>{
+
+    habit.name = nameInput.value;
+
+    saveData();
   });
-  document.addEventListener('click', (ev)=>{
-    if(!monthDropdown.contains(ev.target) && ev.target !== monthBtn){
-      closeMonthDropdown();
+
+  const daysInput = document.getElementById("totalDays");
+
+  daysInput.addEventListener("change",()=>{
+
+    let total = parseInt(daysInput.value,10);
+
+    if(!Number.isFinite(total) || total < 1){
+      total = 1;
     }
+
+    total = Math.min(9999,total);
+
+    habit.total = total;
+
+    saveData();
+
+    renderTracker(habit.id);
   });
 
-  function renderGrid(){
-    const data = currentMonthData();
-    totalInput.value = data.total;
-    totalShowEl.textContent = data.total;
-    monthBtn.textContent = state.currentMonth;
+  document.getElementById("deleteHabit")
+    .addEventListener("click",()=>{
 
-    grid.innerHTML = '';
-    for(let i=1;i<=data.total;i++){
-      const el = document.createElement('div');
-      el.className = 'cell' + (data.done[i] ? ' done' : '');
-      el.textContent = i;
-      el.addEventListener('click', ()=>{
-        if(data.done[i]) delete data.done[i];
-        else data.done[i] = true;
-        save();
-        el.classList.toggle('done');
-        updateCount();
-        if(historyBox.classList.contains('open')) renderHistory();
-      });
-      grid.appendChild(el);
-    }
-    updateCount();
-  }
+      const ok = confirm(
+        'Delete "' + habit.name + '" habit?'
+      );
 
-  function updateCount(){
-    const data = currentMonthData();
-    const c = Object.keys(data.done).filter(k => data.done[k] && Number(k) <= data.total).length;
-    doneCountEl.textContent = c;
-  }
+      if(!ok) return;
 
-  function renderHistory(){
-    const entries = monthNamesFull
-      .filter(m => state.months[m])
-      .map(m => {
-        const d = state.months[m];
-        const c = Object.keys(d.done).filter(k => d.done[k] && Number(k) <= d.total).length;
-        return { month: m, done: c, total: d.total };
-      });
-    historyList.innerHTML = '';
-    if(entries.length === 0){
-      historyList.innerHTML = '<div class="history-empty">Abhi koi data nahi hai.</div>';
-      return;
-    }
-    entries.forEach(e=>{
-      const row = document.createElement('div');
-      row.className = 'history-row';
+      data.habits = data.habits.filter(h=>h.id !== habit.id);
 
-      const left = document.createElement('span');
-      left.className = 'm';
-      left.textContent = e.month;
+      saveData();
 
-      const right = document.createElement('span');
-      right.className = 'right';
-
-      const countSpan = document.createElement('span');
-      countSpan.className = 'c';
-      countSpan.textContent = e.done + ' / ' + e.total;
-
-      const clearBtn = document.createElement('button');
-      clearBtn.className = 'clear';
-      clearBtn.textContent = 'clear';
-      clearBtn.type = 'button';
-
-      let confirming = false;
-      let confirmTimer = null;
-      clearBtn.addEventListener('click', ()=>{
-        if(!confirming){
-          confirming = true;
-          clearBtn.textContent = 'sure?';
-          clearBtn.classList.add('confirming');
-          confirmTimer = setTimeout(()=>{
-            confirming = false;
-            clearBtn.textContent = 'clear';
-            clearBtn.classList.remove('confirming');
-          }, 3000);
-          return;
-        }
-        clearTimeout(confirmTimer);
-        delete state.months[e.month];
-        save();
-        if(state.currentMonth === e.month){
-          // move current view to a month that still has data, or reset today's month to empty
-          const now = new Date();
-          state.currentMonth = monthNamesFull[now.getMonth()];
-          save();
-          renderGrid();
-        }
-        renderHistory();
-      });
-
-      right.appendChild(countSpan);
-      right.appendChild(clearBtn);
-      row.appendChild(left);
-      row.appendChild(right);
-      historyList.appendChild(row);
+      renderHome();
     });
+
+  document.getElementById("resetBtn")
+    .addEventListener("click",()=>{
+
+      const ok = confirm(
+        "Reset all completed days for this habit?"
+      );
+
+      if(!ok) return;
+
+      habit.done = {};
+
+      saveData();
+
+      renderTracker(habit.id);
+    });
+
+  renderGrid(habit);
+}
+
+
+function renderGrid(habit){
+
+  const grid = document.getElementById("grid");
+
+  grid.innerHTML = "";
+
+  for(let i=1;i<=habit.total;i++){
+
+    const cell = document.createElement("div");
+
+    cell.className =
+      "cell" +
+      (habit.done[i] ? " done" : "");
+
+    cell.textContent = i;
+
+    cell.addEventListener("click",()=>{
+
+      if(habit.done[i]){
+        delete habit.done[i];
+      }else{
+        habit.done[i] = true;
+      }
+
+      saveData();
+
+      cell.classList.toggle(
+        "done",
+        !!habit.done[i]
+      );
+
+      document.getElementById("doneCount")
+        .textContent = countDone(habit);
+    });
+
+    grid.appendChild(cell);
   }
+}
 
-  habitInput.addEventListener('input', ()=>{ state.habit = habitInput.value || 'Habit'; save(); });
 
-  totalInput.addEventListener('input', ()=>{
-    const n = parseInt(totalInput.value,10);
-    if(!Number.isFinite(n)) return;
-    currentMonthData().total = clampTotal(n);
-    save();
-    renderGrid();
-  });
-  totalInput.addEventListener('blur', ()=>{
-    const data = currentMonthData();
-    data.total = clampTotal(parseInt(totalInput.value,10) || data.total);
-    totalInput.value = data.total;
-    save();
-    renderGrid();
-  });
+/* START */
 
-  historyBtn.addEventListener('click', ()=>{
-    historyBox.classList.toggle('open');
-    historyBtn.textContent = historyBox.classList.contains('open') ? 'Hide history' : 'View history';
-    if(historyBox.classList.contains('open')) renderHistory();
-  });
+renderHome();
 
-  populateMonthDropdown();
-  renderGrid();
-
-  if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('sw.js').catch(function(){ /* offline registration not critical */ });
-  }
 })();
 </script>
+
 </body>
 </html>
