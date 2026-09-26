@@ -14,12 +14,14 @@
   --text:#f2ede6;
   --dim:#9b969b;
   --red:#e0342f;
-  --blue:#315da8;
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
-html,body{
+html,
+body{
   margin:0;
   min-height:100%;
   background:var(--bg);
@@ -32,7 +34,8 @@ body{
   padding-bottom:env(safe-area-inset-bottom);
 }
 
-button,input{
+button,
+input{
   font:inherit;
 }
 
@@ -47,7 +50,10 @@ button{
   padding:24px 18px 50px;
 }
 
-/* HOME */
+
+/* =========================
+   HOME
+========================= */
 
 .header{
   display:flex;
@@ -103,13 +109,51 @@ button{
   font-size:14px;
 }
 
+
+/* HOME PROGRESS */
+
+.progress-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:14px;
+}
+
+.progress-bar{
+  flex:1;
+  height:7px;
+  background:#39363b;
+  border-radius:99px;
+  overflow:hidden;
+}
+
+.progress-fill{
+  height:100%;
+  width:0%;
+  background:var(--red);
+  border-radius:99px;
+  transition:width .2s ease;
+}
+
+.progress-percent{
+  min-width:42px;
+  text-align:right;
+  color:var(--red);
+  font-size:14px;
+  font-weight:700;
+}
+
 .empty{
   color:var(--dim);
   text-align:center;
   padding:50px 20px;
 }
 
-/* HABIT PAGE */
+
+/* =========================
+   HABIT PAGE
+========================= */
 
 .back-btn{
   background:none;
@@ -135,13 +179,50 @@ button{
 
 .count{
   font-size:16px;
-  margin-bottom:16px;
+  margin-bottom:12px;
 }
 
 .count b{
   color:var(--red);
   font-size:21px;
 }
+
+
+/* LARGE PROGRESS */
+
+.big-progress{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:24px;
+}
+
+.big-progress-bar{
+  flex:1;
+  height:10px;
+  background:#39363b;
+  border-radius:99px;
+  overflow:hidden;
+}
+
+.big-progress-fill{
+  height:100%;
+  width:0%;
+  background:var(--red);
+  border-radius:99px;
+  transition:width .2s ease;
+}
+
+.big-progress-percent{
+  color:var(--red);
+  font-size:18px;
+  font-weight:700;
+  min-width:48px;
+  text-align:right;
+}
+
+
+/* DAYS */
 
 .grid{
   display:grid;
@@ -174,6 +255,9 @@ button{
   transform:scale(.9);
 }
 
+
+/* DELETE */
+
 .delete-btn{
   width:100%;
   padding:13px;
@@ -188,7 +272,10 @@ button{
   color:var(--red);
 }
 
-/* MODAL */
+
+/* =========================
+   CREATE MODAL
+========================= */
 
 .overlay{
   position:fixed;
@@ -265,7 +352,6 @@ button{
   color:white;
 }
 
-/* prevent accidental horizontal overflow */
 .hidden{
   display:none!important;
 }
@@ -276,37 +362,98 @@ button{
 
 <div class="app">
 
-  <!-- HOME -->
+  <!-- =========================
+       HOME PAGE
+  ========================== -->
+
   <section id="homePage">
 
     <div class="header">
       <h1>My Habits</h1>
-      <button class="add-btn" id="addHabitBtn">+</button>
+
+      <button
+        class="add-btn"
+        id="addHabitBtn"
+        type="button">
+        +
+      </button>
     </div>
 
-    <div class="habit-list" id="habitList"></div>
+    <div
+      class="habit-list"
+      id="habitList">
+    </div>
 
   </section>
 
 
-  <!-- HABIT PAGE -->
-  <section id="habitPage" class="hidden">
+  <!-- =========================
+       HABIT PAGE
+  ========================== -->
 
-    <button class="back-btn" id="backBtn">← Back</button>
+  <section
+    id="habitPage"
+    class="hidden">
 
-    <div class="habit-heading" id="habitTitle"></div>
+    <button
+      class="back-btn"
+      id="backBtn"
+      type="button">
+      ← Back
+    </button>
+
+    <div
+      class="habit-heading"
+      id="habitTitle">
+    </div>
 
     <div class="locked-days">
-      <span id="habitDays"></span> days · 🔒 fixed after creation
+      <span id="habitDays"></span>
+      days · 🔒 fixed after creation
     </div>
 
     <div class="count">
-      <b id="doneCount">0</b> / <span id="totalCount">0</span> days done
+      <b id="doneCount">0</b>
+      /
+      <span id="totalCount">0</span>
+      days done
     </div>
 
-    <div class="grid" id="dayGrid"></div>
 
-    <button class="delete-btn" id="deleteBtn">
+    <!-- PROGRESS -->
+
+    <div class="big-progress">
+
+      <div class="big-progress-bar">
+        <div
+          class="big-progress-fill"
+          id="bigProgressFill">
+        </div>
+      </div>
+
+      <div
+        class="big-progress-percent"
+        id="bigProgressPercent">
+        0%
+      </div>
+
+    </div>
+
+
+    <!-- DAYS -->
+
+    <div
+      class="grid"
+      id="dayGrid">
+    </div>
+
+
+    <!-- DELETE -->
+
+    <button
+      class="delete-btn"
+      id="deleteBtn"
+      type="button">
       Delete habit
     </button>
 
@@ -315,14 +462,22 @@ button{
 </div>
 
 
-<!-- CREATE HABIT -->
-<div class="overlay" id="overlay">
+<!-- =========================
+     CREATE HABIT MODAL
+========================== -->
+
+<div
+  class="overlay"
+  id="overlay">
 
   <div class="modal">
 
     <h2>Create habit</h2>
 
-    <label class="label">Habit name</label>
+    <label class="label">
+      Habit name
+    </label>
+
     <input
       class="input"
       id="newHabitName"
@@ -331,8 +486,13 @@ button{
       autocomplete="off"
     >
 
+
     <div class="days-input">
-      <label class="label">How many days?</label>
+
+      <label class="label">
+        How many days?
+      </label>
+
       <input
         class="input"
         id="newHabitDays"
@@ -341,11 +501,26 @@ button{
         inputmode="numeric"
         placeholder="Example: 30"
       >
+
     </div>
 
+
     <div class="modal-actions">
-      <button class="cancel" id="cancelBtn">Cancel</button>
-      <button class="create" id="createBtn">Create</button>
+
+      <button
+        class="cancel"
+        id="cancelBtn"
+        type="button">
+        Cancel
+      </button>
+
+      <button
+        class="create"
+        id="createBtn"
+        type="button">
+        Create
+      </button>
+
     </div>
 
   </div>
@@ -354,59 +529,124 @@ button{
 
 
 <script>
+
 (function(){
+
+  /*
+  ========================================
+  STORAGE
+  ========================================
+  */
 
   const STORAGE_KEY = "habit_tracker_v3";
 
-  const homePage = document.getElementById("homePage");
-  const habitPage = document.getElementById("habitPage");
 
-  const habitList = document.getElementById("habitList");
+  /*
+  ========================================
+  ELEMENTS
+  ========================================
+  */
 
-  const addHabitBtn = document.getElementById("addHabitBtn");
-  const overlay = document.getElementById("overlay");
+  const homePage =
+    document.getElementById("homePage");
 
-  const newHabitName = document.getElementById("newHabitName");
-  const newHabitDays = document.getElementById("newHabitDays");
+  const habitPage =
+    document.getElementById("habitPage");
 
-  const cancelBtn = document.getElementById("cancelBtn");
-  const createBtn = document.getElementById("createBtn");
+  const habitList =
+    document.getElementById("habitList");
 
-  const backBtn = document.getElementById("backBtn");
+  const addHabitBtn =
+    document.getElementById("addHabitBtn");
 
-  const habitTitle = document.getElementById("habitTitle");
-  const habitDays = document.getElementById("habitDays");
+  const overlay =
+    document.getElementById("overlay");
 
-  const doneCount = document.getElementById("doneCount");
-  const totalCount = document.getElementById("totalCount");
+  const newHabitName =
+    document.getElementById("newHabitName");
 
-  const dayGrid = document.getElementById("dayGrid");
-  const deleteBtn = document.getElementById("deleteBtn");
+  const newHabitDays =
+    document.getElementById("newHabitDays");
 
+  const cancelBtn =
+    document.getElementById("cancelBtn");
+
+  const createBtn =
+    document.getElementById("createBtn");
+
+  const backBtn =
+    document.getElementById("backBtn");
+
+  const habitTitle =
+    document.getElementById("habitTitle");
+
+  const habitDays =
+    document.getElementById("habitDays");
+
+  const doneCount =
+    document.getElementById("doneCount");
+
+  const totalCount =
+    document.getElementById("totalCount");
+
+  const dayGrid =
+    document.getElementById("dayGrid");
+
+  const deleteBtn =
+    document.getElementById("deleteBtn");
+
+  const bigProgressFill =
+    document.getElementById("bigProgressFill");
+
+  const bigProgressPercent =
+    document.getElementById("bigProgressPercent");
+
+
+  /*
+  ========================================
+  STATE
+  ========================================
+  */
 
   let state = loadState();
+
   let currentHabitId = null;
+
   let deleteConfirm = false;
+
   let deleteTimer = null;
 
+
+  /*
+  ========================================
+  LOAD DATA
+  ========================================
+  */
 
   function loadState(){
 
     try{
 
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const raw =
+        localStorage.getItem(STORAGE_KEY);
 
       if(raw){
 
-        const data = JSON.parse(raw);
+        const data =
+          JSON.parse(raw);
 
-        if(data && Array.isArray(data.habits)){
+        if(
+          data &&
+          Array.isArray(data.habits)
+        ){
+
           return data;
+
         }
 
       }
 
-    }catch(e){}
+    }catch(error){}
 
     return {
       habits:[]
@@ -415,65 +655,175 @@ button{
   }
 
 
+  /*
+  ========================================
+  SAVE DATA
+  ========================================
+  */
+
   function saveState(){
 
     try{
+
       localStorage.setItem(
         STORAGE_KEY,
         JSON.stringify(state)
       );
-    }catch(e){}
+
+    }catch(error){}
 
   }
 
+
+  /*
+  ========================================
+  CREATE UNIQUE ID
+  ========================================
+  */
 
   function makeId(){
 
-    return Date.now().toString(36) +
-           Math.random().toString(36).slice(2);
+    return (
+      Date.now().toString(36) +
+      Math.random()
+        .toString(36)
+        .slice(2)
+    );
 
   }
 
+
+  /*
+  ========================================
+  GET CURRENT HABIT
+  ========================================
+  */
+
+  function getCurrentHabit(){
+
+    return state.habits.find(
+      habit =>
+        habit.id === currentHabitId
+    );
+
+  }
+
+
+  /*
+  ========================================
+  CALCULATE PROGRESS
+  ========================================
+  */
+
+  function getProgress(habit){
+
+    const total =
+      habit.days;
+
+    const completed =
+      Object.keys(
+        habit.done || {}
+      ).filter(
+        day => habit.done[day]
+      ).length;
+
+    const percentage =
+      total > 0
+      ? Math.round(
+          (completed / total) * 100
+        )
+      : 0;
+
+    return {
+      completed,
+      percentage
+    };
+
+  }
+
+
+  /*
+  ========================================
+  SHOW HOME
+  ========================================
+  */
 
   function showHome(){
 
     currentHabitId = null;
 
-    habitPage.classList.add("hidden");
-    homePage.classList.remove("hidden");
+    habitPage.classList.add(
+      "hidden"
+    );
+
+    homePage.classList.remove(
+      "hidden"
+    );
 
     renderHome();
 
   }
 
 
-  function showHabit(id, addHistory=true){
+  /*
+  ========================================
+  OPEN HABIT
+  ========================================
+  */
+
+  function showHabit(
+    id,
+    addHistory = true
+  ){
 
     const habit =
-      state.habits.find(h => h.id === id);
+      state.habits.find(
+        h => h.id === id
+      );
 
     if(!habit){
+
       showHome();
+
       return;
+
     }
+
 
     currentHabitId = id;
 
-    homePage.classList.add("hidden");
-    habitPage.classList.remove("hidden");
+
+    homePage.classList.add(
+      "hidden"
+    );
+
+    habitPage.classList.remove(
+      "hidden"
+    );
+
 
     renderHabit();
 
+
     /*
-      This creates a browser history entry.
-      Android back button will therefore first
-      return to Home instead of closing the app.
+    Add browser history entry.
+
+    This makes:
+
+    Habit
+      ↓ Back
+    Home
+      ↓ Back
+    Exit app/browser
     */
 
     if(addHistory){
 
       history.pushState(
-        {page:"habit", id:id},
+        {
+          page:"habit",
+          id:id
+        },
         "",
         "#habit-" + id
       );
@@ -483,303 +833,537 @@ button{
   }
 
 
+  /*
+  ========================================
+  HOME PAGE RENDER
+  ========================================
+  */
+
   function renderHome(){
 
     habitList.innerHTML = "";
 
+
     if(state.habits.length === 0){
 
       habitList.innerHTML =
-        '<div class="empty">No habits yet.<br>Tap + to create your first habit.</div>';
+        `
+        <div class="empty">
+          No habits yet.<br>
+          Tap + to create your first habit.
+        </div>
+        `;
 
       return;
 
     }
 
 
-    state.habits.forEach(habit => {
+    state.habits.forEach(
+      habit => {
 
-      const card =
-        document.createElement("button");
+        const card =
+          document.createElement(
+            "button"
+          );
 
-      card.className = "habit-card";
-      card.type = "button";
+        card.className =
+          "habit-card";
 
-      const completed =
-        Object.keys(habit.done || {}).filter(
-          day => habit.done[day]
-        ).length;
+        card.type = "button";
 
-      card.innerHTML = `
-        <div class="habit-title"></div>
-        <div class="habit-info">
-          ${completed} / ${habit.days} days done
-        </div>
-      `;
 
-      card.querySelector(".habit-title")
-          .textContent = habit.name;
+        const progress =
+          getProgress(habit);
 
-      card.addEventListener("click", () => {
 
-        showHabit(habit.id);
+        card.innerHTML = `
 
-      });
+          <div class="habit-title"></div>
 
-      habitList.appendChild(card);
+          <div class="habit-info">
+            ${progress.completed}
+            /
+            ${habit.days}
+            days done
+          </div>
 
-    });
+          <div class="progress-row">
+
+            <div class="progress-bar">
+
+              <div
+                class="progress-fill"
+                style="width:${progress.percentage}%">
+              </div>
+
+            </div>
+
+            <div class="progress-percent">
+              ${progress.percentage}%
+            </div>
+
+          </div>
+
+        `;
+
+
+        card.querySelector(
+          ".habit-title"
+        ).textContent =
+          habit.name;
+
+
+        card.addEventListener(
+          "click",
+          () => {
+
+            showHabit(
+              habit.id
+            );
+
+          }
+        );
+
+
+        habitList.appendChild(
+          card
+        );
+
+      }
+    );
 
   }
 
+
+  /*
+  ========================================
+  HABIT PAGE RENDER
+  ========================================
+  */
 
   function renderHabit(){
 
     const habit =
-      state.habits.find(h => h.id === currentHabitId);
+      getCurrentHabit();
+
 
     if(!habit){
 
       showHome();
+
       return;
 
     }
 
-    habitTitle.textContent = habit.name;
-    habitDays.textContent = habit.days;
-    totalCount.textContent = habit.days;
+
+    const progress =
+      getProgress(habit);
+
+
+    habitTitle.textContent =
+      habit.name;
+
+    habitDays.textContent =
+      habit.days;
+
+    totalCount.textContent =
+      habit.days;
+
+    doneCount.textContent =
+      progress.completed;
+
+
+    /*
+    Percentage
+    */
+
+    bigProgressPercent.textContent =
+      progress.percentage + "%";
+
+
+    bigProgressFill.style.width =
+      progress.percentage + "%";
+
+
+    /*
+    Create day boxes
+    */
 
     dayGrid.innerHTML = "";
 
-    let completed = 0;
 
-
-    for(let day=1; day<=habit.days; day++){
+    for(
+      let day = 1;
+      day <= habit.days;
+      day++
+    ){
 
       const cell =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
+
 
       const isDone =
         !!habit.done[day];
 
-      if(isDone) completed++;
 
       cell.className =
-        "cell" + (isDone ? " done" : "");
+        "cell" +
+        (
+          isDone
+          ? " done"
+          : ""
+        );
 
-      cell.textContent = day;
 
-      cell.addEventListener("click", () => {
+      cell.textContent =
+        day;
 
-        if(habit.done[day]){
 
-          delete habit.done[day];
+      cell.addEventListener(
+        "click",
+        () => {
 
-        }else{
 
-          habit.done[day] = true;
+          if(habit.done[day]){
+
+            delete habit.done[day];
+
+          }else{
+
+            habit.done[day] =
+              true;
+
+          }
+
+
+          saveState();
+
+
+          renderHabit();
 
         }
+      );
 
-        saveState();
 
-        renderHabit();
-
-      });
-
-      dayGrid.appendChild(cell);
+      dayGrid.appendChild(
+        cell
+      );
 
     }
-
-
-    doneCount.textContent = completed;
 
   }
 
 
-  /* CREATE HABIT */
+  /*
+  ========================================
+  CREATE HABIT
+  ========================================
+  */
 
-  addHabitBtn.addEventListener("click", () => {
+  addHabitBtn.addEventListener(
+    "click",
+    () => {
 
-    overlay.classList.add("show");
+      overlay.classList.add(
+        "show"
+      );
 
-    newHabitName.value = "";
-    newHabitDays.value = "";
+      newHabitName.value = "";
 
-    setTimeout(() => {
-      newHabitName.focus();
-    }, 100);
-
-  });
-
-
-  cancelBtn.addEventListener("click", () => {
-
-    overlay.classList.remove("show");
-
-  });
+      newHabitDays.value = "";
 
 
-  overlay.addEventListener("click", (event) => {
+      setTimeout(
+        () => {
 
-    if(event.target === overlay){
+          newHabitName.focus();
 
-      overlay.classList.remove("show");
-
-    }
-
-  });
-
-
-  createBtn.addEventListener("click", () => {
-
-    const name =
-      newHabitName.value.trim();
-
-    const days =
-      parseInt(newHabitDays.value,10);
-
-
-    if(!name){
-
-      alert("Habit name likho.");
-
-      newHabitName.focus();
-
-      return;
+        },
+        100
+      );
 
     }
-
-
-    if(!Number.isFinite(days) || days < 1){
-
-      alert("Days 1 ya usse zyada hone chahiye.");
-
-      newHabitDays.focus();
-
-      return;
-
-    }
-
-
-    const habit = {
-
-      id: makeId(),
-
-      name: name,
-
-      /*
-        IMPORTANT:
-        Days are saved only at creation.
-        There is NO edit-days function.
-      */
-
-      days: days,
-
-      done:{}
-
-    };
-
-
-    state.habits.push(habit);
-
-    saveState();
-
-    overlay.classList.remove("show");
-
-    renderHome();
-
-    /*
-      Open newly-created habit directly.
-    */
-
-    showHabit(habit.id);
-
-  });
-
-
-  /* BACK BUTTON */
-
-  backBtn.addEventListener("click", () => {
-
-    history.back();
-
-  });
+  );
 
 
   /*
-    Android/browser back behavior.
-
-    Habit page -> Home
-    Home -> normal browser/PWA back behavior
+  ========================================
+  CANCEL CREATE
+  ========================================
   */
 
-  window.addEventListener("popstate", (event) => {
+  cancelBtn.addEventListener(
+    "click",
+    () => {
 
-    if(currentHabitId !== null){
+      overlay.classList.remove(
+        "show"
+      );
 
-      currentHabitId = null;
+    }
+  );
 
-      habitPage.classList.add("hidden");
-      homePage.classList.remove("hidden");
+
+  /*
+  ========================================
+  CLOSE MODAL
+  ========================================
+  */
+
+  overlay.addEventListener(
+    "click",
+    event => {
+
+      if(
+        event.target ===
+        overlay
+      ){
+
+        overlay.classList.remove(
+          "show"
+        );
+
+      }
+
+    }
+  );
+
+
+  /*
+  ========================================
+  CREATE
+  ========================================
+  */
+
+  createBtn.addEventListener(
+    "click",
+    () => {
+
+      const name =
+        newHabitName.value.trim();
+
+
+      const days =
+        parseInt(
+          newHabitDays.value,
+          10
+        );
+
+
+      if(!name){
+
+        alert(
+          "Habit name likho."
+        );
+
+        newHabitName.focus();
+
+        return;
+
+      }
+
+
+      if(
+        !Number.isFinite(days) ||
+        days < 1
+      ){
+
+        alert(
+          "Days 1 ya usse zyada hone chahiye."
+        );
+
+        newHabitDays.focus();
+
+        return;
+
+      }
+
+
+      /*
+      New habit.
+
+      DAYS ARE SAVED HERE.
+
+      There is intentionally
+      NO edit-days feature.
+      */
+
+      const habit = {
+
+        id:makeId(),
+
+        name:name,
+
+        days:days,
+
+        done:{}
+
+      };
+
+
+      state.habits.push(
+        habit
+      );
+
+
+      saveState();
+
+
+      overlay.classList.remove(
+        "show"
+      );
+
 
       renderHome();
 
-    }else{
+
+      /*
+      Open newly-created habit
+      */
+
+      showHabit(
+        habit.id
+      );
+
+    }
+  );
+
+
+  /*
+  ========================================
+  BACK BUTTON
+  ========================================
+  */
+
+  backBtn.addEventListener(
+    "click",
+    () => {
+
+      history.back();
+
+    }
+  );
+
+
+  /*
+  ========================================
+  ANDROID / BROWSER BACK
+  ========================================
+  */
+
+  window.addEventListener(
+    "popstate",
+    () => {
+
+      if(
+        currentHabitId !== null
+      ){
+
+        currentHabitId = null;
+
+        habitPage.classList.add(
+          "hidden"
+        );
+
+        homePage.classList.remove(
+          "hidden"
+        );
+
+        renderHome();
+
+      }else{
+
+        showHome();
+
+      }
+
+    }
+  );
+
+
+  /*
+  ========================================
+  DELETE HABIT
+  ========================================
+  */
+
+  deleteBtn.addEventListener(
+    "click",
+    () => {
+
+
+      if(!deleteConfirm){
+
+        deleteConfirm = true;
+
+
+        deleteBtn.textContent =
+          "Tap again to delete";
+
+
+        deleteBtn.classList.add(
+          "confirm"
+        );
+
+
+        deleteTimer =
+          setTimeout(
+            () => {
+
+              deleteConfirm =
+                false;
+
+              deleteBtn.textContent =
+                "Delete habit";
+
+              deleteBtn.classList.remove(
+                "confirm"
+              );
+
+            },
+            3000
+          );
+
+
+        return;
+
+      }
+
+
+      clearTimeout(
+        deleteTimer
+      );
+
+
+      state.habits =
+        state.habits.filter(
+          habit =>
+            habit.id !==
+            currentHabitId
+        );
+
+
+      saveState();
+
+
+      deleteConfirm =
+        false;
+
 
       showHome();
 
     }
-
-  });
-
-
-  /* DELETE HABIT */
-
-  deleteBtn.addEventListener("click", () => {
-
-    if(!deleteConfirm){
-
-      deleteConfirm = true;
-
-      deleteBtn.textContent =
-        "Tap again to delete";
-
-      deleteBtn.classList.add("confirm");
-
-      deleteTimer = setTimeout(() => {
-
-        deleteConfirm = false;
-
-        deleteBtn.textContent =
-          "Delete habit";
-
-        deleteBtn.classList.remove("confirm");
-
-      },3000);
-
-      return;
-
-    }
+  );
 
 
-    clearTimeout(deleteTimer);
-
-    state.habits =
-      state.habits.filter(
-        h => h.id !== currentHabitId
-      );
-
-    saveState();
-
-    deleteConfirm = false;
-
-    showHome();
-
-  });
-
-
-  /* INITIAL LOAD */
+  /*
+  ========================================
+  INITIAL LOAD
+  ========================================
+  */
 
   renderHome();
 
