@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Habit Tracker</title>
 <meta name="theme-color" content="#17161a">
-<link rel="manifest" href="manifest.json">
+<title>Habit Tracker</title>
 
 <style>
 :root{
@@ -15,11 +14,10 @@
   --text:#f2ede6;
   --dim:#9b969b;
   --red:#e0342f;
+  --blue:#315da8;
 }
 
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 html,body{
   margin:0;
@@ -29,46 +27,49 @@ html,body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
 }
 
-button,input{
-  font:inherit;
-}
-
 body{
   padding-top:env(safe-area-inset-top);
   padding-bottom:env(safe-area-inset-bottom);
 }
 
+button,input{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
 .app{
-  max-width:560px;
+  max-width:520px;
+  min-height:100vh;
   margin:auto;
-  padding:24px 18px 60px;
+  padding:24px 18px 50px;
 }
 
 /* HOME */
 
 .header{
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
   margin-bottom:28px;
 }
 
-.title{
-  font-size:30px;
-  font-weight:700;
+.header h1{
   margin:0;
+  font-size:30px;
 }
 
 .add-btn{
-  width:48px;
-  height:48px;
-  border:1px solid var(--line);
-  border-radius:12px;
-  background:var(--panel);
-  color:var(--text);
-  font-size:30px;
+  width:46px;
+  height:46px;
+  border:0;
+  border-radius:14px;
+  background:var(--red);
+  color:white;
+  font-size:28px;
   line-height:1;
-  cursor:pointer;
 }
 
 .habit-list{
@@ -78,25 +79,26 @@ body{
 }
 
 .habit-card{
+  width:100%;
+  padding:18px;
   border:1px solid var(--line);
   border-radius:14px;
   background:var(--panel);
-  padding:18px;
-  cursor:pointer;
-  transition:.12s;
+  color:var(--text);
+  text-align:left;
 }
 
 .habit-card:active{
   transform:scale(.98);
 }
 
-.habit-card-title{
+.habit-title{
   font-size:20px;
-  font-weight:600;
+  font-weight:700;
 }
 
-.habit-card-info{
-  margin-top:8px;
+.habit-info{
+  margin-top:7px;
   color:var(--dim);
   font-size:14px;
 }
@@ -104,75 +106,31 @@ body{
 .empty{
   color:var(--dim);
   text-align:center;
-  padding:60px 20px;
+  padding:50px 20px;
 }
 
-/* TRACKER */
+/* HABIT PAGE */
 
-.back{
+.back-btn{
   background:none;
-  border:none;
-  color:var(--dim);
-  padding:0;
-  font-size:15px;
-  margin-bottom:24px;
-  cursor:pointer;
-}
-
-.habit-title{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-bottom:24px;
-}
-
-.habit-title input{
-  flex:1;
-  min-width:0;
-  background:none;
-  border:none;
-  border-bottom:2px solid var(--line);
-  outline:none;
+  border:0;
   color:var(--text);
+  font-size:16px;
+  padding:0;
+  margin-bottom:24px;
+}
+
+.habit-heading{
   font-size:30px;
   font-weight:700;
-  padding:4px 0;
+  margin-bottom:8px;
+  word-break:break-word;
 }
 
-.habit-title input:focus{
-  border-bottom-color:var(--red);
-}
-
-.delete-btn{
-  border:none;
-  background:none;
-  color:var(--dim);
-  font-size:13px;
-  text-decoration:underline;
-}
-
-.days-setting{
-  display:flex;
-  align-items:center;
-  gap:8px;
+.locked-days{
   color:var(--dim);
   font-size:15px;
-  margin-bottom:22px;
-}
-
-.days-setting input{
-  width:80px;
-  background:none;
-  border:none;
-  border-bottom:2px solid var(--line);
-  color:var(--text);
-  outline:none;
-  padding:4px;
-  text-align:center;
-}
-
-.days-setting input:focus{
-  border-bottom-color:var(--red);
+  margin-bottom:24px;
 }
 
 .count{
@@ -189,7 +147,7 @@ body{
   display:grid;
   grid-template-columns:repeat(6,1fr);
   gap:8px;
-  margin-bottom:28px;
+  margin-bottom:30px;
 }
 
 .cell{
@@ -197,18 +155,13 @@ body{
   border:2px solid var(--line);
   border-radius:7px;
   display:flex;
-  justify-content:center;
   align-items:center;
+  justify-content:center;
   color:var(--dim);
-  font-size:14px;
+  font-size:15px;
   font-weight:600;
-  cursor:pointer;
   user-select:none;
-  transition:.1s;
-}
-
-.cell:active{
-  transform:scale(.9);
+  transition:.12s;
 }
 
 .cell.done{
@@ -217,440 +170,618 @@ body{
   color:white;
 }
 
-.reset-btn{
-  background:none;
-  border:1px solid var(--line);
-  color:var(--dim);
-  border-radius:7px;
-  padding:9px 14px;
-  font-size:13px;
+.cell:active{
+  transform:scale(.9);
 }
 
-/* ADD HABIT */
-
-.form-title{
-  font-size:30px;
-  font-weight:700;
-  margin-bottom:30px;
-}
-
-.form input{
+.delete-btn{
   width:100%;
-  background:none;
-  border:none;
-  border-bottom:2px solid var(--line);
-  color:var(--text);
-  outline:none;
-  padding:10px 0;
-  font-size:18px;
-  margin-bottom:28px;
+  padding:13px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:transparent;
+  color:var(--dim);
 }
 
-.form input:focus{
+.delete-btn.confirm{
+  border-color:var(--red);
+  color:var(--red);
+}
+
+/* MODAL */
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.65);
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  z-index:100;
+}
+
+.overlay.show{
+  display:flex;
+}
+
+.modal{
+  width:min(520px,100%);
+  background:var(--panel);
+  border-radius:20px 20px 0 0;
+  padding:24px 20px calc(24px + env(safe-area-inset-bottom));
+}
+
+.modal h2{
+  margin:0 0 22px;
+  font-size:22px;
+}
+
+.label{
+  display:block;
+  color:var(--dim);
+  font-size:13px;
+  margin-bottom:7px;
+}
+
+.input{
+  width:100%;
+  padding:13px 0;
+  border:0;
+  border-bottom:2px solid var(--line);
+  outline:none;
+  background:transparent;
+  color:var(--text);
+}
+
+.input:focus{
   border-bottom-color:var(--red);
 }
 
-.create-btn{
-  width:100%;
-  border:none;
-  border-radius:10px;
-  padding:14px;
-  background:var(--red);
-  color:white;
-  font-weight:600;
+.days-input{
+  margin-top:20px;
 }
 
-.cancel-btn{
-  width:100%;
-  margin-top:12px;
-  border:1px solid var(--line);
-  border-radius:10px;
+.modal-actions{
+  display:flex;
+  gap:10px;
+  margin-top:25px;
+}
+
+.modal-actions button{
+  flex:1;
   padding:13px;
-  background:none;
+  border-radius:9px;
+}
+
+.cancel{
+  border:1px solid var(--line);
+  background:transparent;
   color:var(--dim);
 }
 
-/* DESKTOP */
+.create{
+  border:0;
+  background:var(--red);
+  color:white;
+}
 
-@media(min-width:600px){
-  .grid{
-    gap:10px;
-  }
+/* prevent accidental horizontal overflow */
+.hidden{
+  display:none!important;
 }
 </style>
 </head>
 
 <body>
 
-<div class="app" id="app"></div>
+<div class="app">
+
+  <!-- HOME -->
+  <section id="homePage">
+
+    <div class="header">
+      <h1>My Habits</h1>
+      <button class="add-btn" id="addHabitBtn">+</button>
+    </div>
+
+    <div class="habit-list" id="habitList"></div>
+
+  </section>
+
+
+  <!-- HABIT PAGE -->
+  <section id="habitPage" class="hidden">
+
+    <button class="back-btn" id="backBtn">← Back</button>
+
+    <div class="habit-heading" id="habitTitle"></div>
+
+    <div class="locked-days">
+      <span id="habitDays"></span> days · 🔒 fixed after creation
+    </div>
+
+    <div class="count">
+      <b id="doneCount">0</b> / <span id="totalCount">0</span> days done
+    </div>
+
+    <div class="grid" id="dayGrid"></div>
+
+    <button class="delete-btn" id="deleteBtn">
+      Delete habit
+    </button>
+
+  </section>
+
+</div>
+
+
+<!-- CREATE HABIT -->
+<div class="overlay" id="overlay">
+
+  <div class="modal">
+
+    <h2>Create habit</h2>
+
+    <label class="label">Habit name</label>
+    <input
+      class="input"
+      id="newHabitName"
+      maxlength="40"
+      placeholder="Example: Study"
+      autocomplete="off"
+    >
+
+    <div class="days-input">
+      <label class="label">How many days?</label>
+      <input
+        class="input"
+        id="newHabitDays"
+        type="number"
+        min="1"
+        inputmode="numeric"
+        placeholder="Example: 30"
+      >
+    </div>
+
+    <div class="modal-actions">
+      <button class="cancel" id="cancelBtn">Cancel</button>
+      <button class="create" id="createBtn">Create</button>
+    </div>
+
+  </div>
+
+</div>
+
 
 <script>
 (function(){
 
-const STORAGE_KEY = "habit_tracker_multi_v1";
+  const STORAGE_KEY = "habit_tracker_v3";
 
-let data = loadData();
+  const homePage = document.getElementById("homePage");
+  const habitPage = document.getElementById("habitPage");
 
-function loadData(){
-  try{
-    const saved = localStorage.getItem(STORAGE_KEY);
+  const habitList = document.getElementById("habitList");
 
-    if(saved){
-      const parsed = JSON.parse(saved);
+  const addHabitBtn = document.getElementById("addHabitBtn");
+  const overlay = document.getElementById("overlay");
 
-      if(parsed && Array.isArray(parsed.habits)){
-        return parsed;
+  const newHabitName = document.getElementById("newHabitName");
+  const newHabitDays = document.getElementById("newHabitDays");
+
+  const cancelBtn = document.getElementById("cancelBtn");
+  const createBtn = document.getElementById("createBtn");
+
+  const backBtn = document.getElementById("backBtn");
+
+  const habitTitle = document.getElementById("habitTitle");
+  const habitDays = document.getElementById("habitDays");
+
+  const doneCount = document.getElementById("doneCount");
+  const totalCount = document.getElementById("totalCount");
+
+  const dayGrid = document.getElementById("dayGrid");
+  const deleteBtn = document.getElementById("deleteBtn");
+
+
+  let state = loadState();
+  let currentHabitId = null;
+  let deleteConfirm = false;
+  let deleteTimer = null;
+
+
+  function loadState(){
+
+    try{
+
+      const raw = localStorage.getItem(STORAGE_KEY);
+
+      if(raw){
+
+        const data = JSON.parse(raw);
+
+        if(data && Array.isArray(data.habits)){
+          return data;
+        }
+
       }
+
+    }catch(e){}
+
+    return {
+      habits:[]
+    };
+
+  }
+
+
+  function saveState(){
+
+    try{
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(state)
+      );
+    }catch(e){}
+
+  }
+
+
+  function makeId(){
+
+    return Date.now().toString(36) +
+           Math.random().toString(36).slice(2);
+
+  }
+
+
+  function showHome(){
+
+    currentHabitId = null;
+
+    habitPage.classList.add("hidden");
+    homePage.classList.remove("hidden");
+
+    renderHome();
+
+  }
+
+
+  function showHabit(id, addHistory=true){
+
+    const habit =
+      state.habits.find(h => h.id === id);
+
+    if(!habit){
+      showHome();
+      return;
     }
-  }catch(e){}
 
-  return {
-    habits:[
-      {
-        id:makeId(),
-        name:"Gym",
-        total:30,
-        done:{}
-      }
-    ]
-  };
-}
+    currentHabitId = id;
 
-function saveData(){
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
-}
+    homePage.classList.add("hidden");
+    habitPage.classList.remove("hidden");
 
-function makeId(){
-  return Date.now().toString(36) + Math.random().toString(36).slice(2);
-}
+    renderHabit();
 
-function escapeHTML(text){
-  return String(text)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-}
+    /*
+      This creates a browser history entry.
+      Android back button will therefore first
+      return to Home instead of closing the app.
+    */
 
-function getHabit(id){
-  return data.habits.find(h => h.id === id);
-}
+    if(addHistory){
 
-function countDone(habit){
-  return Object.keys(habit.done || {}).filter(day=>{
-    return habit.done[day] === true &&
-           Number(day) <= habit.total;
-  }).length;
-}
+      history.pushState(
+        {page:"habit", id:id},
+        "",
+        "#habit-" + id
+      );
 
-/* HOME */
+    }
 
-function renderHome(){
+  }
 
-  app.innerHTML = `
-    <div class="header">
-      <h1 class="title">My Habits</h1>
-      <button class="add-btn" id="addHabit">+</button>
-    </div>
 
-    <div class="habit-list" id="habitList"></div>
-  `;
+  function renderHome(){
 
-  const list = document.getElementById("habitList");
+    habitList.innerHTML = "";
 
-  if(data.habits.length === 0){
+    if(state.habits.length === 0){
 
-    list.innerHTML = `
-      <div class="empty">
-        No habits yet.<br>
-        Tap + to create your first habit.
-      </div>
-    `;
+      habitList.innerHTML =
+        '<div class="empty">No habits yet.<br>Tap + to create your first habit.</div>';
 
-  }else{
+      return;
 
-    data.habits.forEach(habit=>{
+    }
 
-      const done = countDone(habit);
 
-      const card = document.createElement("div");
+    state.habits.forEach(habit => {
+
+      const card =
+        document.createElement("button");
+
       card.className = "habit-card";
+      card.type = "button";
+
+      const completed =
+        Object.keys(habit.done || {}).filter(
+          day => habit.done[day]
+        ).length;
 
       card.innerHTML = `
-        <div class="habit-card-title">
-          ${escapeHTML(habit.name)}
-        </div>
-
-        <div class="habit-card-info">
-          ${done} / ${habit.total} days done
+        <div class="habit-title"></div>
+        <div class="habit-info">
+          ${completed} / ${habit.days} days done
         </div>
       `;
 
-      card.addEventListener("click",()=>{
-        renderTracker(habit.id);
+      card.querySelector(".habit-title")
+          .textContent = habit.name;
+
+      card.addEventListener("click", () => {
+
+        showHabit(habit.id);
+
       });
 
-      list.appendChild(card);
-    });
-  }
+      habitList.appendChild(card);
 
-  document.getElementById("addHabit")
-    .addEventListener("click",renderAddHabit);
-}
-
-
-/* ADD HABIT */
-
-function renderAddHabit(){
-
-  app.innerHTML = `
-    <button class="back" id="cancelTop">← Back</button>
-
-    <div class="form-title">
-      New Habit
-    </div>
-
-    <div class="form">
-
-      <input
-        id="newName"
-        maxlength="40"
-        placeholder="Habit name"
-        autocomplete="off"
-      >
-
-      <input
-        id="newDays"
-        type="number"
-        min="1"
-        max="9999"
-        value="30"
-        placeholder="Number of days"
-      >
-
-      <button class="create-btn" id="createHabit">
-        Create Habit
-      </button>
-
-      <button class="cancel-btn" id="cancelHabit">
-        Cancel
-      </button>
-
-    </div>
-  `;
-
-  document.getElementById("cancelTop")
-    .addEventListener("click",renderHome);
-
-  document.getElementById("cancelHabit")
-    .addEventListener("click",renderHome);
-
-  document.getElementById("createHabit")
-    .addEventListener("click",()=>{
-
-      const nameInput = document.getElementById("newName");
-      const daysInput = document.getElementById("newDays");
-
-      const name = nameInput.value.trim() || "Habit";
-
-      let total = parseInt(daysInput.value,10);
-
-      if(!Number.isFinite(total) || total < 1){
-        total = 30;
-      }
-
-      total = Math.min(9999,total);
-
-      const habit = {
-        id:makeId(),
-        name:name,
-        total:total,
-        done:{}
-      };
-
-      data.habits.push(habit);
-
-      saveData();
-
-      renderTracker(habit.id);
     });
 
-  setTimeout(()=>{
-    document.getElementById("newName").focus();
-  },50);
-}
-
-
-/* TRACKER */
-
-function renderTracker(id){
-
-  const habit = getHabit(id);
-
-  if(!habit){
-    renderHome();
-    return;
   }
 
-  app.innerHTML = `
 
-    <button class="back" id="backHome">
-      ← All Habits
-    </button>
+  function renderHabit(){
 
-    <div class="habit-title">
+    const habit =
+      state.habits.find(h => h.id === currentHabitId);
 
-      <input
-        id="habitName"
-        value="${escapeHTML(habit.name)}"
-        maxlength="40"
-      >
+    if(!habit){
 
-      <button class="delete-btn" id="deleteHabit">
-        Delete
-      </button>
+      showHome();
+      return;
 
-    </div>
-
-    <div class="days-setting">
-
-      <span>Days:</span>
-
-      <input
-        id="totalDays"
-        type="number"
-        min="1"
-        max="9999"
-        value="${habit.total}"
-      >
-
-    </div>
-
-    <div class="count">
-      <b id="doneCount">${countDone(habit)}</b>
-      /
-      <span id="totalCount">${habit.total}</span>
-      days done
-    </div>
-
-    <div class="grid" id="grid"></div>
-
-    <button class="reset-btn" id="resetBtn">
-      Reset completed days
-    </button>
-  `;
-
-  document.getElementById("backHome")
-    .addEventListener("click",renderHome);
-
-  const nameInput = document.getElementById("habitName");
-
-  nameInput.addEventListener("input",()=>{
-
-    habit.name = nameInput.value;
-
-    saveData();
-  });
-
-  const daysInput = document.getElementById("totalDays");
-
-  daysInput.addEventListener("change",()=>{
-
-    let total = parseInt(daysInput.value,10);
-
-    if(!Number.isFinite(total) || total < 1){
-      total = 1;
     }
 
-    total = Math.min(9999,total);
+    habitTitle.textContent = habit.name;
+    habitDays.textContent = habit.days;
+    totalCount.textContent = habit.days;
 
-    habit.total = total;
+    dayGrid.innerHTML = "";
 
-    saveData();
+    let completed = 0;
 
-    renderTracker(habit.id);
+
+    for(let day=1; day<=habit.days; day++){
+
+      const cell =
+        document.createElement("div");
+
+      const isDone =
+        !!habit.done[day];
+
+      if(isDone) completed++;
+
+      cell.className =
+        "cell" + (isDone ? " done" : "");
+
+      cell.textContent = day;
+
+      cell.addEventListener("click", () => {
+
+        if(habit.done[day]){
+
+          delete habit.done[day];
+
+        }else{
+
+          habit.done[day] = true;
+
+        }
+
+        saveState();
+
+        renderHabit();
+
+      });
+
+      dayGrid.appendChild(cell);
+
+    }
+
+
+    doneCount.textContent = completed;
+
+  }
+
+
+  /* CREATE HABIT */
+
+  addHabitBtn.addEventListener("click", () => {
+
+    overlay.classList.add("show");
+
+    newHabitName.value = "";
+    newHabitDays.value = "";
+
+    setTimeout(() => {
+      newHabitName.focus();
+    }, 100);
+
   });
 
-  document.getElementById("deleteHabit")
-    .addEventListener("click",()=>{
 
-      const ok = confirm(
-        'Delete "' + habit.name + '" habit?'
-      );
+  cancelBtn.addEventListener("click", () => {
 
-      if(!ok) return;
+    overlay.classList.remove("show");
 
-      data.habits = data.habits.filter(h=>h.id !== habit.id);
+  });
 
-      saveData();
+
+  overlay.addEventListener("click", (event) => {
+
+    if(event.target === overlay){
+
+      overlay.classList.remove("show");
+
+    }
+
+  });
+
+
+  createBtn.addEventListener("click", () => {
+
+    const name =
+      newHabitName.value.trim();
+
+    const days =
+      parseInt(newHabitDays.value,10);
+
+
+    if(!name){
+
+      alert("Habit name likho.");
+
+      newHabitName.focus();
+
+      return;
+
+    }
+
+
+    if(!Number.isFinite(days) || days < 1){
+
+      alert("Days 1 ya usse zyada hone chahiye.");
+
+      newHabitDays.focus();
+
+      return;
+
+    }
+
+
+    const habit = {
+
+      id: makeId(),
+
+      name: name,
+
+      /*
+        IMPORTANT:
+        Days are saved only at creation.
+        There is NO edit-days function.
+      */
+
+      days: days,
+
+      done:{}
+
+    };
+
+
+    state.habits.push(habit);
+
+    saveState();
+
+    overlay.classList.remove("show");
+
+    renderHome();
+
+    /*
+      Open newly-created habit directly.
+    */
+
+    showHabit(habit.id);
+
+  });
+
+
+  /* BACK BUTTON */
+
+  backBtn.addEventListener("click", () => {
+
+    history.back();
+
+  });
+
+
+  /*
+    Android/browser back behavior.
+
+    Habit page -> Home
+    Home -> normal browser/PWA back behavior
+  */
+
+  window.addEventListener("popstate", (event) => {
+
+    if(currentHabitId !== null){
+
+      currentHabitId = null;
+
+      habitPage.classList.add("hidden");
+      homePage.classList.remove("hidden");
 
       renderHome();
-    });
 
-  document.getElementById("resetBtn")
-    .addEventListener("click",()=>{
+    }else{
 
-      const ok = confirm(
-        "Reset all completed days for this habit?"
+      showHome();
+
+    }
+
+  });
+
+
+  /* DELETE HABIT */
+
+  deleteBtn.addEventListener("click", () => {
+
+    if(!deleteConfirm){
+
+      deleteConfirm = true;
+
+      deleteBtn.textContent =
+        "Tap again to delete";
+
+      deleteBtn.classList.add("confirm");
+
+      deleteTimer = setTimeout(() => {
+
+        deleteConfirm = false;
+
+        deleteBtn.textContent =
+          "Delete habit";
+
+        deleteBtn.classList.remove("confirm");
+
+      },3000);
+
+      return;
+
+    }
+
+
+    clearTimeout(deleteTimer);
+
+    state.habits =
+      state.habits.filter(
+        h => h.id !== currentHabitId
       );
 
-      if(!ok) return;
+    saveState();
 
-      habit.done = {};
+    deleteConfirm = false;
 
-      saveData();
+    showHome();
 
-      renderTracker(habit.id);
-    });
-
-  renderGrid(habit);
-}
+  });
 
 
-function renderGrid(habit){
+  /* INITIAL LOAD */
 
-  const grid = document.getElementById("grid");
-
-  grid.innerHTML = "";
-
-  for(let i=1;i<=habit.total;i++){
-
-    const cell = document.createElement("div");
-
-    cell.className =
-      "cell" +
-      (habit.done[i] ? " done" : "");
-
-    cell.textContent = i;
-
-    cell.addEventListener("click",()=>{
-
-      if(habit.done[i]){
-        delete habit.done[i];
-      }else{
-        habit.done[i] = true;
-      }
-
-      saveData();
-
-      cell.classList.toggle(
-        "done",
-        !!habit.done[i]
-      );
-
-      document.getElementById("doneCount")
-        .textContent = countDone(habit);
-    });
-
-    grid.appendChild(cell);
-  }
-}
-
-
-/* START */
-
-renderHome();
+  renderHome();
 
 })();
 </script>
