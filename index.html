@@ -313,16 +313,36 @@ button{
 
 .cell{
   aspect-ratio:1;
-  border:2px solid var(--line);
-  border-radius:8px;
+  border:2px solid #4b474d;
+  border-radius:10px;
   display:flex;
   align-items:center;
   justify-content:center;
-  color:var(--dim);
-  font-size:15px;
-  font-weight:600;
+
+  /* FIX: white button background remove */
+  background:#242227;
+
+  /* FIX: numbers clearly visible */
+  color:#f2ede6;
+
+  font-size:16px;
+  font-weight:700;
   user-select:none;
-  transition:transform .12s ease,background .18s ease;
+
+  transition:
+    transform .12s ease,
+    background .18s ease,
+    border-color .18s ease;
+}
+
+.cell.done{
+  background:var(--red);
+  border-color:var(--red);
+  color:#fff;
+}
+
+.cell:active{
+  transform:scale(.92);
 }
 
 .cell.done{
