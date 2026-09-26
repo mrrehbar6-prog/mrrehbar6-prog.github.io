@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#e0342f">
+<meta name="theme-color" content="#17161a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Habit Tracker</title>
@@ -51,7 +51,7 @@ button{
 }
 
 /* =========================
-   PREMIUM SPLASH
+   SPLASH
 ========================= */
 
 #splash{
@@ -63,7 +63,9 @@ button{
   align-items:center;
   justify-content:center;
   overflow:hidden;
-  transition:opacity .32s ease,visibility .32s ease;
+  opacity:1;
+  visibility:visible;
+  transition:opacity .35s ease,visibility .35s ease;
 }
 
 #splash.hide{
@@ -78,9 +80,7 @@ button{
   border:9px solid var(--white);
   border-radius:25px;
   position:relative;
-  animation:
-    splashIn .55s cubic-bezier(.2,.8,.2,1),
-    splashPulse 1.1s ease-in-out .35s;
+  animation:splashIn .55s cubic-bezier(.2,.8,.2,1);
 }
 
 .splash-logo:after{
@@ -114,11 +114,6 @@ button{
   }
 }
 
-@keyframes splashPulse{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.035)}
-}
-
 @keyframes shine{
   from{
     transform:scale(.1);
@@ -140,8 +135,6 @@ button{
   margin:auto;
   padding:24px 18px 50px;
 }
-
-/* HOME */
 
 .header{
   display:flex;
@@ -244,7 +237,9 @@ button{
   line-height:1.6;
 }
 
-/* HABIT PAGE */
+/* =========================
+   HABIT PAGE
+========================= */
 
 .back-btn{
   background:none;
@@ -354,7 +349,9 @@ button{
   color:var(--red);
 }
 
-/* CREATE MODAL */
+/* =========================
+   MODAL
+========================= */
 
 .overlay{
   position:fixed;
@@ -447,7 +444,7 @@ button{
 
 <body>
 
-<!-- PREMIUM OPENING ANIMATION -->
+<!-- SPLASH -->
 <div id="splash">
   <div class="splash-shine"></div>
   <div class="splash-logo"></div>
@@ -475,9 +472,7 @@ button{
   </section>
 
   <!-- HABIT PAGE -->
-  <section
-    id="habitPage"
-    class="hidden">
+  <section id="habitPage" class="hidden">
 
     <button
       class="back-btn"
@@ -515,7 +510,8 @@ button{
 
     <div
       class="grid"
-      id="dayGrid"></div>
+      id="dayGrid">
+    </div>
 
     <button
       class="delete-btn"
@@ -559,6 +555,7 @@ button{
         id="newHabitDays"
         type="number"
         min="1"
+        max="3650"
         inputmode="numeric"
         placeholder="Example: 30">
 
@@ -588,32 +585,666 @@ button{
 <script>
 (function(){
 
-const STORAGE_KEY="habit_tracker_v3";
+"use strict";
 
-const homePage=document.getElementById("homePage");
-const habitPage=document.getElementById("habitPage");
-const habitList=document.getElementById("habitList");
-const addHabitBtn=document.getElementById("addHabitBtn");
+/* =========================
+   STORAGE
+========================= */
 
-const overlay=document.getElementById("overlay");
-const newHabitName=document.getElementById("newHabitName");
-const newHabitDays=document.getElementById("newHabitDays");
-const cancelBtn=document.getElementById("cancelBtn");
-const createBtn=document.getElementById("createBtn");
+const STORAGE_KEY = "habit_tracker_v3";
 
-const backBtn=document.getElementById("backBtn");
-const habitTitle=document.getElementById("habitTitle");
-const habitDays=document.getElementById("habitDays");
-const doneCount=document.getElementById("doneCount");
-const totalCount=document.getElementById("totalCount");
-const dayGrid=document.getElementById("dayGrid");
+let habits = [];
+let currentHabitId = null;
+let deleteConfirm = false;
 
-const bigProgressFill=
+/* =========================
+   ELEMENTS
+========================= */
+
+const splash =
+  document.getElementById("splash");
+
+const homePage =
+  document.getElementById("homePage");
+
+const habitPage =
+  document.getElementById("habitPage");
+
+const habitList =
+  document.getElementById("habitList");
+
+const addHabitBtn =
+  document.getElementById("addHabitBtn");
+
+const overlay =
+  document.getElementById("overlay");
+
+const newHabitName =
+  document.getElementById("newHabitName");
+
+const newHabitDays =
+  document.getElementById("newHabitDays");
+
+const cancelBtn =
+  document.getElementById("cancelBtn");
+
+const createBtn =
+  document.getElementById("createBtn");
+
+const backBtn =
+  document.getElementById("backBtn");
+
+const habitTitle =
+  document.getElementById("habitTitle");
+
+const habitDays =
+  document.getElementById("habitDays");
+
+const doneCount =
+  document.getElementById("doneCount");
+
+const totalCount =
+  document.getElementById("totalCount");
+
+const dayGrid =
+  document.getElementById("dayGrid");
+
+const bigProgressFill =
   document.getElementById("bigProgressFill");
 
-const bigProgressPercent=
+const bigProgressPercent =
   document.getElementById("bigProgressPercent");
 
-const deleteBtn=document.getElementById("deleteBtn");
+const deleteBtn =
+  document.getElementById("deleteBtn");
 
-let
+/* =========================
+   STORAGE FUNCTIONS
+========================= */
+
+function loadHabits(){
+
+  try{
+
+    const saved =
+      localStorage.getItem(STORAGE_KEY);
+
+    if(saved){
+
+      const parsed =
+        JSON.parse(saved);
+
+      if(Array.isArray(parsed)){
+        habits = parsed;
+      }
+
+    }
+
+  }catch(error){
+
+    console.error(
+      "Could not load habits:",
+      error
+    );
+
+    habits = [];
+  }
+}
+
+
+function saveHabits(){
+
+  try{
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(habits)
+    );
+
+  }catch(error){
+
+    console.error(
+      "Could not save habits:",
+      error
+    );
+  }
+}
+
+/* =========================
+   HELPERS
+========================= */
+
+function createId(){
+
+  return Date.now().toString(36)
+    + Math.random()
+      .toString(36)
+      .slice(2);
+}
+
+
+function getHabit(id){
+
+  return habits.find(
+    habit => habit.id === id
+  );
+}
+
+
+function getDoneCount(habit){
+
+  if(!habit || !Array.isArray(habit.done)){
+    return 0;
+  }
+
+  return habit.done.filter(
+    value => value === true
+  ).length;
+}
+
+
+function getProgress(habit){
+
+  if(!habit || !habit.days){
+    return 0;
+  }
+
+  const done =
+    getDoneCount(habit);
+
+  return Math.round(
+    (done / habit.days) * 100
+  );
+}
+
+/* =========================
+   HOME
+========================= */
+
+function renderHome(){
+
+  habitList.innerHTML = "";
+
+  if(habits.length === 0){
+
+    const empty =
+      document.createElement("div");
+
+    empty.className = "empty";
+
+    empty.innerHTML =
+      "No habits yet.<br>" +
+      "Tap <b>+</b> to create your first habit.";
+
+    habitList.appendChild(empty);
+
+    return;
+  }
+
+  habits.forEach(habit => {
+
+    const card =
+      document.createElement("button");
+
+    card.type = "button";
+    card.className = "habit-card";
+
+    const done =
+      getDoneCount(habit);
+
+    const percent =
+      getProgress(habit);
+
+    card.innerHTML = `
+      <div class="habit-title">
+        ${escapeHTML(habit.name)}
+      </div>
+
+      <div class="habit-info">
+        ${done} / ${habit.days} days completed
+      </div>
+
+      <div class="progress-row">
+
+        <div class="progress-bar">
+          <div
+            class="progress-fill"
+            style="width:${percent}%">
+          </div>
+        </div>
+
+        <div class="progress-percent">
+          ${percent}%
+        </div>
+
+      </div>
+    `;
+
+    card.addEventListener(
+      "click",
+      function(){
+
+        openHabit(habit.id);
+
+      }
+    );
+
+    habitList.appendChild(card);
+
+  });
+}
+
+/* =========================
+   HABIT PAGE
+========================= */
+
+function openHabit(id){
+
+  const habit =
+    getHabit(id);
+
+  if(!habit){
+    return;
+  }
+
+  currentHabitId = id;
+  deleteConfirm = false;
+
+  homePage.classList.add("hidden");
+  habitPage.classList.remove("hidden");
+
+  deleteBtn.textContent =
+    "Delete habit";
+
+  deleteBtn.classList.remove(
+    "confirm"
+  );
+
+  renderHabit();
+}
+
+
+function renderHabit(){
+
+  const habit =
+    getHabit(currentHabitId);
+
+  if(!habit){
+    goHome();
+    return;
+  }
+
+  habitTitle.textContent =
+    habit.name;
+
+  habitDays.textContent =
+    habit.days;
+
+  totalCount.textContent =
+    habit.days;
+
+  const done =
+    getDoneCount(habit);
+
+  const percent =
+    getProgress(habit);
+
+  doneCount.textContent =
+    done;
+
+  bigProgressFill.style.width =
+    percent + "%";
+
+  bigProgressPercent.textContent =
+    percent + "%";
+
+  dayGrid.innerHTML = "";
+
+  for(let i = 0; i < habit.days; i++){
+
+    const cell =
+      document.createElement("button");
+
+    cell.type = "button";
+    cell.className = "cell";
+
+    if(habit.done[i]){
+      cell.classList.add("done");
+    }
+
+    cell.textContent =
+      i + 1;
+
+    cell.addEventListener(
+      "click",
+      function(){
+
+        toggleDay(i);
+
+      }
+    );
+
+    dayGrid.appendChild(cell);
+  }
+}
+
+
+function toggleDay(index){
+
+  const habit =
+    getHabit(currentHabitId);
+
+  if(!habit){
+    return;
+  }
+
+  habit.done[index] =
+    !habit.done[index];
+
+  saveHabits();
+  renderHabit();
+  renderHome();
+}
+
+/* =========================
+   CREATE HABIT
+========================= */
+
+function openCreate(){
+
+  overlay.classList.add("show");
+
+  newHabitName.value = "";
+  newHabitDays.value = "";
+
+  setTimeout(function(){
+
+    newHabitName.focus();
+
+  },100);
+}
+
+
+function closeCreate(){
+
+  overlay.classList.remove("show");
+
+  newHabitName.value = "";
+  newHabitDays.value = "";
+}
+
+
+function createHabit(){
+
+  const name =
+    newHabitName.value.trim();
+
+  const days =
+    parseInt(
+      newHabitDays.value,
+      10
+    );
+
+  if(!name){
+
+    alert("Please enter a habit name.");
+
+    newHabitName.focus();
+
+    return;
+  }
+
+  if(!days || days < 1){
+
+    alert("Please enter a valid number of days.");
+
+    newHabitDays.focus();
+
+    return;
+  }
+
+  if(days > 3650){
+
+    alert("Maximum is 3650 days.");
+
+    return;
+  }
+
+  const habit = {
+
+    id: createId(),
+
+    name: name,
+
+    days: days,
+
+    done: new Array(days).fill(false),
+
+    createdAt:
+      new Date().toISOString()
+
+  };
+
+  habits.push(habit);
+
+  saveHabits();
+
+  closeCreate();
+
+  renderHome();
+
+  openHabit(habit.id);
+}
+
+/* =========================
+   DELETE
+========================= */
+
+function deleteCurrentHabit(){
+
+  if(!currentHabitId){
+    return;
+  }
+
+  if(!deleteConfirm){
+
+    deleteConfirm = true;
+
+    deleteBtn.textContent =
+      "Tap again to delete";
+
+    deleteBtn.classList.add(
+      "confirm"
+    );
+
+    return;
+  }
+
+  habits =
+    habits.filter(
+      habit =>
+        habit.id !== currentHabitId
+    );
+
+  saveHabits();
+
+  currentHabitId = null;
+  deleteConfirm = false;
+
+  goHome();
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function goHome(){
+
+  currentHabitId = null;
+  deleteConfirm = false;
+
+  habitPage.classList.add("hidden");
+  homePage.classList.remove("hidden");
+
+  renderHome();
+}
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHTML(value){
+
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+/* =========================
+   EVENTS
+========================= */
+
+addHabitBtn.addEventListener(
+  "click",
+  openCreate
+);
+
+cancelBtn.addEventListener(
+  "click",
+  closeCreate
+);
+
+createBtn.addEventListener(
+  "click",
+  createHabit
+);
+
+backBtn.addEventListener(
+  "click",
+  goHome
+);
+
+deleteBtn.addEventListener(
+  "click",
+  deleteCurrentHabit
+);
+
+overlay.addEventListener(
+  "click",
+  function(event){
+
+    if(event.target === overlay){
+      closeCreate();
+    }
+
+  }
+);
+
+newHabitName.addEventListener(
+  "keydown",
+  function(event){
+
+    if(event.key === "Enter"){
+      newHabitDays.focus();
+    }
+
+  }
+);
+
+newHabitDays.addEventListener(
+  "keydown",
+  function(event){
+
+    if(event.key === "Enter"){
+      createHabit();
+    }
+
+  }
+);
+
+/* =========================
+   START APP
+========================= */
+
+loadHabits();
+renderHome();
+
+/*
+  IMPORTANT:
+  This is the part that fixes
+  the red screen problem.
+*/
+
+window.addEventListener(
+  "load",
+  function(){
+
+    setTimeout(
+      function(){
+
+        splash.classList.add("hide");
+
+      },
+      1200
+    );
+
+  }
+);
+
+/*
+  Safety fallback:
+  Even if the load event behaves
+  unexpectedly, the splash will
+  disappear after 2 seconds.
+*/
+
+setTimeout(
+  function(){
+
+    splash.classList.add("hide");
+
+  },
+  2000
+);
+
+/* =========================
+   SERVICE WORKER
+========================= */
+
+if("serviceWorker" in navigator){
+
+  window.addEventListener(
+    "load",
+    function(){
+
+      navigator.serviceWorker
+        .register("./sw.js")
+        .then(function(){
+
+          console.log(
+            "Service worker registered."
+          );
+
+        })
+        .catch(function(error){
+
+          console.log(
+            "Service worker registration failed:",
+            error
+          );
+
+        });
+
+    }
+  );
+
+}
+
+})();
+</script>
+
+</body>
+</html>
