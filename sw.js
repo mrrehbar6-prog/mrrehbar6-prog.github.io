@@ -1,4 +1,4 @@
-const CACHE = 'habit-tracker-v1';
+const CACHE = 'habit-tracker-v2';
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(['./', './index.html', './manifest.json'])));
   self.skipWaiting();
