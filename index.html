@@ -106,6 +106,7 @@ button{
 }
 
 @keyframes splashIn{
+
   0%{
     opacity:0;
     transform:scale(.65) rotate(-8deg);
@@ -119,9 +120,11 @@ button{
   100%{
     transform:scale(1) rotate(0);
   }
+
 }
 
 @keyframes shine{
+
   from{
     transform:scale(.1);
     opacity:1;
@@ -131,6 +134,7 @@ button{
     transform:scale(3);
     opacity:0;
   }
+
 }
 
 
@@ -392,6 +396,7 @@ button{
 }
 
 @keyframes modalIn{
+
   from{
     transform:translateY(25px);
     opacity:0;
@@ -401,6 +406,7 @@ button{
     transform:translateY(0);
     opacity:1;
   }
+
 }
 
 .modal h2{
@@ -457,7 +463,11 @@ button{
   color:#fff;
 }
 
-</style></head><body><!-- SPLASH --><div id="splash">  <div class="splash-shine"></div>  <div class="splash-logo"></div></div><div class="app">  <!-- HOME -->  <section id="homePage"><div class="header">
+</style></head><body><!-- =========================
+     SPLASH
+========================= --><div id="splash">  <div class="splash-shine"></div>  <div class="splash-logo"></div></div><!-- =========================
+     APP
+========================= --><div class="app">  <!-- HOME -->  <section id="homePage"><div class="header">
 
   <h1>My Habits</h1>
 
@@ -536,7 +546,9 @@ button{
 
 </button>
 
-  </section></div><!-- CREATE HABIT --><div
+  </section></div><!-- =========================
+     CREATE HABIT
+========================= --><div
   class="overlay"
   id="overlay">  <div class="modal"><h2>Create habit</h2>
 
@@ -599,11 +611,9 @@ button{
    STORAGE
 ========================= */
 
-const STORAGE_KEY =
-  "habit_tracker_v3";
+const STORAGE_KEY = "habit_tracker_v3";
 
-const NAV_KEY =
-  "habit_tracker_current_page";
+const NAV_KEY = "habit_tracker_current_page";
 
 let habits = [];
 
@@ -691,7 +701,9 @@ function loadHabits(){
         JSON.parse(saved);
 
       if(Array.isArray(parsed)){
+
         habits = parsed;
+
       }
 
     }
@@ -795,7 +807,7 @@ function getProgress(habit){
 
 
 /* =========================
-   NAVIGATION STATE
+   NAVIGATION STORAGE
 ========================= */
 
 function saveNavigationState(){
@@ -826,7 +838,7 @@ function saveNavigationState(){
   }catch(error){
 
     console.log(
-      "Could not save navigation state:",
+      "Navigation state error:",
       error
     );
 
@@ -835,7 +847,7 @@ function saveNavigationState(){
 }
 
 
-function getSavedNavigationState(){
+function getNavigationState(){
 
   try{
 
@@ -843,7 +855,9 @@ function getSavedNavigationState(){
       localStorage.getItem(NAV_KEY);
 
     if(!saved){
+
       return null;
+
     }
 
     return JSON.parse(saved);
@@ -956,12 +970,15 @@ function openHabit(id){
     getHabit(id);
 
   if(!habit){
+
     return;
+
   }
 
   currentHabitId = id;
 
   deleteConfirm = false;
+
 
   homePage.classList.add(
     "hidden"
@@ -971,6 +988,7 @@ function openHabit(id){
     "hidden"
   );
 
+
   deleteBtn.textContent =
     "Delete habit";
 
@@ -978,31 +996,24 @@ function openHabit(id){
     "confirm"
   );
 
+
   saveNavigationState();
 
-  /*
-    Add a browser history entry.
 
-    This makes Android back button:
-    Habit page → Home
+  /*
+    Browser history entry.
+    Android Back will use this.
   */
 
-  if(
-    !history.state ||
-    history.state.page !== "habit" ||
-    history.state.habitId !== id
-  ){
+  history.pushState(
+    {
+      page:"habit",
+      habitId:id
+    },
+    "",
+    "#habit"
+  );
 
-    history.pushState(
-      {
-        page:"habit",
-        habitId:id
-      },
-      "",
-      "#habit"
-    );
-
-  }
 
   renderHabit();
 
@@ -1104,7 +1115,9 @@ function toggleDay(index){
     getHabit(currentHabitId);
 
   if(!habit){
+
     return;
+
   }
 
 
@@ -1212,17 +1225,15 @@ function createHabit(){
 
   const habit = {
 
-    id: createId(),
+    id:createId(),
 
-    name: name,
+    name:name,
 
-    days: days,
+    days:days,
 
-    done:
-      new Array(days).fill(false),
+    done:new Array(days).fill(false),
 
-    createdAt:
-      new Date().toISOString()
+    createdAt:new Date().toISOString()
 
   };
 
@@ -1247,7 +1258,9 @@ function createHabit(){
 function deleteCurrentHabit(){
 
   if(!currentHabitId){
+
     return;
+
   }
 
 
@@ -1288,10 +1301,10 @@ function deleteCurrentHabit(){
 
 
 /* =========================
-   NAVIGATION
+   GO HOME
 ========================= */
 
-function goHome(changeHistory = true){
+function goHome(removeHistory){
 
   currentHabitId = null;
 
@@ -1317,49 +1330,45 @@ function goHome(changeHistory = true){
 
   saveNavigationState();
 
-  /*
-    When the user taps our own ← Back button,
-    remove the habit history entry.
-  */
-
-  if(
-    changeHistory &&
-    history.state &&
-    history.state.page === "habit"
-  ){
-
-    history.back();
-
-    return;
-
-  }
-
 
   renderHome();
+
+
+  if(removeHistory){
+
+    if(
+      history.state &&
+      history.state.page === "habit"
+    ){
+
+      history.back();
+
+    }
+
+  }
 
 }
 
 
 /* =========================
-   ANDROID / BROWSER BACK
+   ANDROID BACK BUTTON
 ========================= */
 
 window.addEventListener(
   "popstate",
-  function(event){
+  function(){
 
     /*
-      If user is currently on Habit page,
-      Android back should go to Home.
+      If Habit page is open,
+      Android Back → Home.
     */
 
-    if(
-      currentHabitId !== null
-    ){
+    if(currentHabitId){
 
       currentHabitId = null;
 
       deleteConfirm = false;
+
 
       habitPage.classList.add(
         "hidden"
@@ -1369,6 +1378,7 @@ window.addEventListener(
         "hidden"
       );
 
+
       saveNavigationState();
 
       renderHome();
@@ -1377,11 +1387,11 @@ window.addEventListener(
 
     }
 
-    /*
-      If already on Home, do not create
-      another fake history entry.
 
-      Browser/PWA gets normal back behavior.
+    /*
+      Already on Home.
+      Do nothing special.
+      Android/browser handles exit.
     */
 
     renderHome();
@@ -1391,13 +1401,14 @@ window.addEventListener(
 
 
 /* =========================
-   RESTORE PAGE AFTER REFRESH
+   RESTORE AFTER REFRESH
 ========================= */
 
-function restoreNavigation(){
+function restorePage(){
 
   const saved =
-    getSavedNavigationState();
+    getNavigationState();
+
 
   if(
     saved &&
@@ -1409,6 +1420,7 @@ function restoreNavigation(){
     currentHabitId =
       saved.habitId;
 
+
     homePage.classList.add(
       "hidden"
     );
@@ -1417,7 +1429,9 @@ function restoreNavigation(){
       "hidden"
     );
 
+
     deleteConfirm = false;
+
 
     deleteBtn.textContent =
       "Delete habit";
@@ -1425,6 +1439,7 @@ function restoreNavigation(){
     deleteBtn.classList.remove(
       "confirm"
     );
+
 
     renderHabit();
 
@@ -1501,4 +1516,26 @@ cancelBtn.addEventListener(
 
 createBtn.addEventListener(
   "click",
-  create
+  createHabit
+);
+
+
+backBtn.addEventListener(
+  "click",
+  function(){
+
+    if(currentHabitId){
+
+      history.back();
+
+    }else{
+
+      goHome(false);
+
+    }
+
+  }
+);
+
+
+deleteBtn.addEventLi
