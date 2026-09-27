@@ -1,32 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<!DOCTYPE html><html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport"
+content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-<meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width,initial-scale=1,viewport-fit=cover">
-
-<meta name="theme-color" content="#e0342f">
-
-<meta name="apple-mobile-web-app-capable" content="yes">
-
-<meta name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent">
+<meta name="theme-color" content="#e0342f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style"
+content="black-translucent">
 
 <meta name="apple-mobile-web-app-title"
-      content="Habit">
+content="Habit">
 
 <link rel="apple-touch-icon"
-      href="https://mrrehbar6-prog.github.io/icon-512.png">
-
-<!-- PWA MANIFEST -->
-<link rel="manifest"
-      href="https://mrrehbar6-prog.github.io/manifest.json">
-
-<title>Habit Tracker</title>
-
-<style>
+      href="https://mrrehbar6-prog.github.io/icon-512.png"><link rel="manifest"
+      href="https://mrrehbar6-prog.github.io/manifest.json"><title>Habit Tracker</title><style>
 
 :root{
   --bg:#17161a;
@@ -473,187 +457,138 @@ button{
   color:#fff;
 }
 
-</style>
+</style></head><body><!-- SPLASH --><div id="splash">  <div class="splash-shine"></div>  <div class="splash-logo"></div></div><div class="app">  <!-- HOME -->  <section id="homePage"><div class="header">
 
-</head>
+  <h1>My Habits</h1>
 
-<body>
-
-
-<!-- SPLASH -->
-
-<div id="splash">
-
-  <div class="splash-shine"></div>
-
-  <div class="splash-logo"></div>
+  <button
+    class="add-btn"
+    id="addHabitBtn"
+    type="button">
+    +
+  </button>
 
 </div>
-
-
-<div class="app">
-
-
-  <!-- HOME -->
-
-  <section id="homePage">
-
-    <div class="header">
-
-      <h1>My Habits</h1>
-
-      <button
-        class="add-btn"
-        id="addHabitBtn"
-        type="button">
-        +
-      </button>
-
-    </div>
-
-    <div
-      class="habit-list"
-      id="habitList">
-    </div>
-
-  </section>
-
-
-  <!-- HABIT PAGE -->
-
-  <section id="habitPage" class="hidden">
-
-    <button
-      class="back-btn"
-      id="backBtn"
-      type="button">
-      ← Back
-    </button>
-
-    <div
-      class="habit-heading"
-      id="habitTitle">
-    </div>
-
-    <div class="locked-days">
-
-      <span id="habitDays"></span>
-      days · 🔒 fixed after creation
-
-    </div>
-
-    <div class="count">
-
-      <b id="doneCount">0</b>
-      /
-      <span id="totalCount">0</span>
-      days done
-
-    </div>
-
-    <div class="big-progress">
-
-      <div class="big-progress-bar">
-
-        <div
-          class="big-progress-fill"
-          id="bigProgressFill">
-        </div>
-
-      </div>
-
-      <div
-        class="big-progress-percent"
-        id="bigProgressPercent">
-        0%
-      </div>
-
-    </div>
-
-    <div
-      class="grid"
-      id="dayGrid">
-    </div>
-
-    <button
-      class="delete-btn"
-      id="deleteBtn"
-      type="button">
-
-      Delete habit
-
-    </button>
-
-  </section>
-
-
-</div>
-
-
-<!-- CREATE HABIT -->
 
 <div
-  class="overlay"
-  id="overlay">
+  class="habit-list"
+  id="habitList">
+</div>
 
-  <div class="modal">
+  </section>  <!-- HABIT PAGE -->  <section id="habitPage" class="hidden"><button
+  class="back-btn"
+  id="backBtn"
+  type="button">
+  ← Back
+</button>
 
-    <h2>Create habit</h2>
+<div
+  class="habit-heading"
+  id="habitTitle">
+</div>
 
-    <label class="label">
-      Habit name
-    </label>
+<div class="locked-days">
 
-    <input
-      class="input"
-      id="newHabitName"
-      maxlength="40"
-      placeholder="Example: Study"
-      autocomplete="off">
+  <span id="habitDays"></span>
+  days · 🔒 fixed after creation
 
+</div>
 
-    <div class="days-input">
+<div class="count">
 
-      <label class="label">
-        How many days?
-      </label>
+  <b id="doneCount">0</b>
+  /
+  <span id="totalCount">0</span>
+  days done
 
-      <input
-        class="input"
-        id="newHabitDays"
-        type="number"
-        min="1"
-        max="3650"
-        inputmode="numeric"
-        placeholder="Example: 30">
+</div>
 
-    </div>
+<div class="big-progress">
 
+  <div class="big-progress-bar">
 
-    <div class="modal-actions">
-
-      <button
-        class="cancel"
-        id="cancelBtn"
-        type="button">
-        Cancel
-      </button>
-
-      <button
-        class="create"
-        id="createBtn"
-        type="button">
-        Create
-      </button>
-
+    <div
+      class="big-progress-fill"
+      id="bigProgressFill">
     </div>
 
   </div>
 
+  <div
+    class="big-progress-percent"
+    id="bigProgressPercent">
+    0%
+  </div>
+
+</div>
+
+<div
+  class="grid"
+  id="dayGrid">
+</div>
+
+<button
+  class="delete-btn"
+  id="deleteBtn"
+  type="button">
+
+  Delete habit
+
+</button>
+
+  </section></div><!-- CREATE HABIT --><div
+  class="overlay"
+  id="overlay">  <div class="modal"><h2>Create habit</h2>
+
+<label class="label">
+  Habit name
+</label>
+
+<input
+  class="input"
+  id="newHabitName"
+  maxlength="40"
+  placeholder="Example: Study"
+  autocomplete="off">
+
+
+<div class="days-input">
+
+  <label class="label">
+    How many days?
+  </label>
+
+  <input
+    class="input"
+    id="newHabitDays"
+    type="number"
+    min="1"
+    max="3650"
+    inputmode="numeric"
+    placeholder="Example: 30">
+
 </div>
 
 
-<script>
+<div class="modal-actions">
+
+  <button
+    class="cancel"
+    id="cancelBtn"
+    type="button">
+    Cancel
+  </button>
+
+  <button
+    class="create"
+    id="createBtn"
+    type="button">
+    Create
+  </button>
+
+</div>
+
+  </div></div><script>
 
 (function(){
 
@@ -666,6 +601,9 @@ button{
 
 const STORAGE_KEY =
   "habit_tracker_v3";
+
+const NAV_KEY =
+  "habit_tracker_current_page";
 
 let habits = [];
 
@@ -857,6 +795,69 @@ function getProgress(habit){
 
 
 /* =========================
+   NAVIGATION STATE
+========================= */
+
+function saveNavigationState(){
+
+  try{
+
+    if(currentHabitId){
+
+      localStorage.setItem(
+        NAV_KEY,
+        JSON.stringify({
+          page:"habit",
+          habitId:currentHabitId
+        })
+      );
+
+    }else{
+
+      localStorage.setItem(
+        NAV_KEY,
+        JSON.stringify({
+          page:"home"
+        })
+      );
+
+    }
+
+  }catch(error){
+
+    console.log(
+      "Could not save navigation state:",
+      error
+    );
+
+  }
+
+}
+
+
+function getSavedNavigationState(){
+
+  try{
+
+    const saved =
+      localStorage.getItem(NAV_KEY);
+
+    if(!saved){
+      return null;
+    }
+
+    return JSON.parse(saved);
+
+  }catch(error){
+
+    return null;
+
+  }
+
+}
+
+
+/* =========================
    HOME
 ========================= */
 
@@ -977,6 +978,32 @@ function openHabit(id){
     "confirm"
   );
 
+  saveNavigationState();
+
+  /*
+    Add a browser history entry.
+
+    This makes Android back button:
+    Habit page → Home
+  */
+
+  if(
+    !history.state ||
+    history.state.page !== "habit" ||
+    history.state.habitId !== id
+  ){
+
+    history.pushState(
+      {
+        page:"habit",
+        habitId:id
+      },
+      "",
+      "#habit"
+    );
+
+  }
+
   renderHabit();
 
 }
@@ -989,7 +1016,7 @@ function renderHabit(){
 
   if(!habit){
 
-    goHome();
+    goHome(false);
 
     return;
 
@@ -1255,7 +1282,7 @@ function deleteCurrentHabit(){
   deleteConfirm = false;
 
 
-  goHome();
+  goHome(true);
 
 }
 
@@ -1264,7 +1291,7 @@ function deleteCurrentHabit(){
    NAVIGATION
 ========================= */
 
-function goHome(){
+function goHome(changeHistory = true){
 
   currentHabitId = null;
 
@@ -1280,7 +1307,142 @@ function goHome(){
   );
 
 
+  deleteBtn.textContent =
+    "Delete habit";
+
+  deleteBtn.classList.remove(
+    "confirm"
+  );
+
+
+  saveNavigationState();
+
+  /*
+    When the user taps our own ← Back button,
+    remove the habit history entry.
+  */
+
+  if(
+    changeHistory &&
+    history.state &&
+    history.state.page === "habit"
+  ){
+
+    history.back();
+
+    return;
+
+  }
+
+
   renderHome();
+
+}
+
+
+/* =========================
+   ANDROID / BROWSER BACK
+========================= */
+
+window.addEventListener(
+  "popstate",
+  function(event){
+
+    /*
+      If user is currently on Habit page,
+      Android back should go to Home.
+    */
+
+    if(
+      currentHabitId !== null
+    ){
+
+      currentHabitId = null;
+
+      deleteConfirm = false;
+
+      habitPage.classList.add(
+        "hidden"
+      );
+
+      homePage.classList.remove(
+        "hidden"
+      );
+
+      saveNavigationState();
+
+      renderHome();
+
+      return;
+
+    }
+
+    /*
+      If already on Home, do not create
+      another fake history entry.
+
+      Browser/PWA gets normal back behavior.
+    */
+
+    renderHome();
+
+  }
+);
+
+
+/* =========================
+   RESTORE PAGE AFTER REFRESH
+========================= */
+
+function restoreNavigation(){
+
+  const saved =
+    getSavedNavigationState();
+
+  if(
+    saved &&
+    saved.page === "habit" &&
+    saved.habitId &&
+    getHabit(saved.habitId)
+  ){
+
+    currentHabitId =
+      saved.habitId;
+
+    homePage.classList.add(
+      "hidden"
+    );
+
+    habitPage.classList.remove(
+      "hidden"
+    );
+
+    deleteConfirm = false;
+
+    deleteBtn.textContent =
+      "Delete habit";
+
+    deleteBtn.classList.remove(
+      "confirm"
+    );
+
+    renderHabit();
+
+  }else{
+
+    currentHabitId = null;
+
+    homePage.classList.remove(
+      "hidden"
+    );
+
+    habitPage.classList.add(
+      "hidden"
+    );
+
+    renderHome();
+
+  }
 
 }
 
@@ -1339,156 +1501,4 @@ cancelBtn.addEventListener(
 
 createBtn.addEventListener(
   "click",
-  createHabit
-);
-
-
-backBtn.addEventListener(
-  "click",
-  goHome
-);
-
-
-deleteBtn.addEventListener(
-  "click",
-  deleteCurrentHabit
-);
-
-
-overlay.addEventListener(
-  "click",
-  function(event){
-
-    if(
-      event.target === overlay
-    ){
-
-      closeCreate();
-
-    }
-
-  }
-);
-
-
-newHabitName.addEventListener(
-  "keydown",
-  function(event){
-
-    if(
-      event.key === "Enter"
-    ){
-
-      newHabitDays.focus();
-
-    }
-
-  }
-);
-
-
-newHabitDays.addEventListener(
-  "keydown",
-  function(event){
-
-    if(
-      event.key === "Enter"
-    ){
-
-      createHabit();
-
-    }
-
-  }
-);
-
-
-/* =========================
-   START APP
-========================= */
-
-loadHabits();
-
-renderHome();
-
-
-window.addEventListener(
-  "load",
-  function(){
-
-    setTimeout(
-      function(){
-
-        splash.classList.add(
-          "hide"
-        );
-
-      },
-      1200
-    );
-
-  }
-);
-
-
-setTimeout(
-  function(){
-
-    splash.classList.add(
-      "hide"
-    );
-
-  },
-  2000
-);
-
-
-/* =========================
-   SERVICE WORKER
-========================= */
-
-if(
-  "serviceWorker" in navigator
-){
-
-  window.addEventListener(
-    "load",
-    function(){
-
-      navigator.serviceWorker
-        .register(
-          "https://mrrehbar6-prog.github.io/sw.js"
-        )
-
-        .then(
-          function(){
-
-            console.log(
-              "Service worker registered."
-            );
-
-          }
-        )
-
-        .catch(
-          function(error){
-
-            console.log(
-              "Service worker registration failed:",
-              error
-            );
-
-          }
-        );
-
-    }
-  );
-
-}
-
-})();
-
-</script>
-
-</body>
-</html>
+  create
