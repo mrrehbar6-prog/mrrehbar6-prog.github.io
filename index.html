@@ -1,24 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 
 <meta
   name="viewport"
   content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-<meta
-  name="theme-color"
-  content="#17161a">
+<meta name="theme-color" content="#17161a">
 
-<meta
-  name="apple-mobile-web-app-capable"
-  content="yes">
-
-<meta
-  name="apple-mobile-web-app-status-bar-style"
-  content="black-translucent">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <title>Habit Tracker</title>
 
@@ -76,14 +68,15 @@ button{
 }
 
 
-/* =========================
+/* ==================================================
    SPLASH
-========================= */
+================================================== */
 
 #splash{
   position:fixed;
   inset:0;
-  z-index:9999;
+  z-index:99999;
+
   background:var(--red);
 
   display:flex;
@@ -94,16 +87,34 @@ button{
 
   opacity:1;
   visibility:visible;
+  pointer-events:auto;
 
   transition:
     opacity .35s ease,
     visibility .35s ease;
+
+  /*
+    SAFETY:
+    Even if JavaScript fails,
+    CSS removes the splash automatically.
+  */
+  animation:splashSafetyHide .1s linear 2.5s forwards;
 }
 
 #splash.hide{
   opacity:0;
   visibility:hidden;
   pointer-events:none;
+}
+
+@keyframes splashSafetyHide{
+
+  to{
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+  }
+
 }
 
 .splash-logo{
@@ -123,9 +134,13 @@ button{
   content:"";
 
   position:absolute;
+
   inset:17px;
 
-  border:3px solid rgba(255,255,255,.18);
+  border:
+    3px solid
+    rgba(255,255,255,.18);
+
   border-radius:9px;
 }
 
@@ -137,9 +152,11 @@ button{
 
   border-radius:50%;
 
-  background:rgba(255,255,255,.08);
+  background:
+    rgba(255,255,255,.08);
 
-  animation:shine 1.2s ease-out;
+  animation:
+    shine 1.2s ease-out;
 }
 
 @keyframes splashIn{
@@ -159,6 +176,7 @@ button{
   }
 
   100%{
+    opacity:1;
     transform:
       scale(1)
       rotate(0);
@@ -181,9 +199,9 @@ button{
 }
 
 
-/* =========================
+/* ==================================================
    APP
-========================= */
+================================================== */
 
 .app{
   max-width:520px;
@@ -240,12 +258,11 @@ button{
 }
 
 
-/* =========================
+/* ==================================================
    HABIT LIST
-========================= */
+================================================== */
 
 .habit-list{
-
   display:flex;
 
   flex-direction:column;
@@ -256,11 +273,9 @@ button{
 }
 
 
-/*
-  IMPORTANT:
-  touch-action: pan-y allows
-  normal vertical scrolling.
-*/
+/* ==================================================
+   HABIT CARD
+================================================== */
 
 .habit-card{
 
@@ -268,7 +283,9 @@ button{
 
   padding:18px;
 
-  border:1px solid var(--line);
+  border:
+    1px solid
+    var(--line);
 
   border-radius:16px;
 
@@ -281,9 +298,12 @@ button{
   position:relative;
 
   user-select:none;
-
   -webkit-user-select:none;
 
+  /*
+    Allows normal scrolling before
+    long press becomes a drag.
+  */
   touch-action:pan-y;
 
   transition:
@@ -299,21 +319,20 @@ button{
 
 
 /*
-  Long-press dragging state
+   Card being dragged
 */
 
 .habit-card.dragging{
 
-  opacity:.72;
+  opacity:.82;
 
   border-color:var(--red);
 
   box-shadow:
-    0 12px 35px
-    rgba(0,0,0,.45);
+    0 15px 40px
+    rgba(0,0,0,.55);
 
-  transform:
-    scale(1.02);
+  transform:scale(1.02);
 
   z-index:1000;
 
@@ -322,14 +341,31 @@ button{
 
 
 /*
-  Small drag hint
+   Placeholder
+*/
+
+.habit-card.placeholder{
+
+  opacity:.25;
+
+  border:
+    2px dashed
+    var(--red);
+
+  background:
+    rgba(224,52,47,.08);
+}
+
+
+/*
+   Drag icon
 */
 
 .drag-hint{
 
   position:absolute;
 
-  top:14px;
+  top:13px;
   right:14px;
 
   color:#777277;
@@ -337,23 +373,8 @@ button{
   font-size:18px;
 
   pointer-events:none;
-}
 
-
-/*
-  Show a subtle placeholder
-  when card is being moved
-*/
-
-.habit-card.drag-placeholder{
-
-  opacity:.25;
-
-  border:
-    2px dashed var(--red);
-
-  background:
-    rgba(224,52,47,.08);
+  opacity:.8;
 }
 
 
@@ -363,7 +384,9 @@ button{
 
   font-weight:700;
 
-  padding-right:28px;
+  padding-right:32px;
+
+  word-break:break-word;
 }
 
 .habit-info{
@@ -440,9 +463,9 @@ button{
 }
 
 
-/* =========================
+/* ==================================================
    HABIT PAGE
-========================= */
+================================================== */
 
 .back-btn{
 
@@ -561,7 +584,8 @@ button{
   aspect-ratio:1;
 
   border:
-    2px solid #4b474d;
+    2px solid
+    #4b474d;
 
   border-radius:10px;
 
@@ -607,7 +631,8 @@ button{
   padding:13px;
 
   border:
-    1px solid var(--line);
+    1px solid
+    var(--line);
 
   border-radius:10px;
 
@@ -624,9 +649,9 @@ button{
 }
 
 
-/* =========================
+/* ==================================================
    MODAL
-========================= */
+================================================== */
 
 .overlay{
 
@@ -643,7 +668,7 @@ button{
 
   justify-content:center;
 
-  z-index:100;
+  z-index:5000;
 }
 
 .overlay.show{
@@ -725,7 +750,8 @@ button{
   border:0;
 
   border-bottom:
-    2px solid var(--line);
+    2px solid
+    var(--line);
 
   outline:none;
 
@@ -766,7 +792,8 @@ button{
 .cancel{
 
   border:
-    1px solid var(--line);
+    1px solid
+    var(--line);
 
   background:transparent;
 
@@ -782,17 +809,67 @@ button{
   color:#fff;
 }
 
-</style>
 
+/* ==================================================
+   DRAG INFO
+================================================== */
+
+.drag-message{
+
+  position:fixed;
+
+  left:50%;
+
+  bottom:
+    calc(
+      18px +
+      env(safe-area-inset-bottom)
+    );
+
+  transform:
+    translateX(-50%);
+
+  background:#29272c;
+
+  border:
+    1px solid
+    #4b474d;
+
+  color:#ddd;
+
+  padding:
+    9px
+    14px;
+
+  border-radius:99px;
+
+  font-size:12px;
+
+  z-index:4000;
+
+  opacity:0;
+
+  pointer-events:none;
+
+  transition:
+    opacity .2s ease;
+}
+
+.drag-message.show{
+
+  opacity:1;
+}
+
+</style>
 </head>
 
 
 <body>
 
 
-<!-- =========================
+<!-- ==================================================
      SPLASH
-========================= -->
+================================================== -->
 
 <div id="splash">
 
@@ -803,12 +880,14 @@ button{
 </div>
 
 
+<!-- ==================================================
+     APP
+================================================== -->
+
 <div class="app">
 
 
-  <!-- =========================
-       HOME
-  ========================= -->
+  <!-- HOME -->
 
   <section id="homePage">
 
@@ -840,9 +919,7 @@ button{
 
 
 
-  <!-- =========================
-       HABIT PAGE
-  ========================= -->
+  <!-- HABIT PAGE -->
 
   <section
     id="habitPage"
@@ -894,7 +971,6 @@ button{
 
     <div class="big-progress">
 
-
       <div class="big-progress-bar">
 
         <div
@@ -913,7 +989,6 @@ button{
         0%
 
       </div>
-
 
     </div>
 
@@ -937,22 +1012,18 @@ button{
 
   </section>
 
-
 </div>
 
 
-
-<!-- =========================
+<!-- ==================================================
      CREATE HABIT MODAL
-========================= -->
+================================================== -->
 
 <div
   class="overlay"
   id="overlay">
 
-
   <div class="modal">
-
 
     <h2>
       Create habit
@@ -976,7 +1047,6 @@ button{
 
     <div class="days-input">
 
-
       <label class="label">
 
         How many days?
@@ -993,12 +1063,10 @@ button{
         inputmode="numeric"
         placeholder="Example: 30">
 
-
     </div>
 
 
     <div class="modal-actions">
-
 
       <button
         class="cancel"
@@ -1019,14 +1087,22 @@ button{
 
       </button>
 
-
     </div>
-
 
   </div>
 
 </div>
 
+
+<!-- DRAG MESSAGE -->
+
+<div
+  class="drag-message"
+  id="dragMessage">
+
+  Hold and move to reorder
+
+</div>
 
 
 <script>
@@ -1036,9 +1112,9 @@ button{
 "use strict";
 
 
-/* =========================
+/* ==================================================
    STORAGE
-========================= */
+================================================== */
 
 const STORAGE_KEY =
   "habit_tracker_v3";
@@ -1046,16 +1122,14 @@ const STORAGE_KEY =
 
 let habits = [];
 
-let currentHabitId =
-  null;
+let currentHabitId = null;
 
-let deleteConfirm =
-  false;
+let deleteConfirm = false;
 
 
-/* =========================
+/* ==================================================
    DRAG STATE
-========================= */
+================================================== */
 
 let dragState = {
 
@@ -1073,14 +1147,16 @@ let dragState = {
 
   dragging:false,
 
-  moved:false
+  moved:false,
+
+  cancelled:false
 
 };
 
 
-/* =========================
+/* ==================================================
    ELEMENTS
-========================= */
+================================================== */
 
 const splash =
   document.getElementById(
@@ -1177,10 +1253,15 @@ const deleteBtn =
     "deleteBtn"
   );
 
+const dragMessage =
+  document.getElementById(
+    "dragMessage"
+  );
 
-/* =========================
-   STORAGE FUNCTIONS
-========================= */
+
+/* ==================================================
+   STORAGE
+================================================== */
 
 function loadHabits(){
 
@@ -1191,18 +1272,93 @@ function loadHabits(){
         STORAGE_KEY
       );
 
-    if(saved){
+    if(!saved){
 
-      const parsed =
-        JSON.parse(saved);
+      habits = [];
 
-      if(Array.isArray(parsed)){
-
-        habits = parsed;
-
-      }
-
+      return;
     }
+
+    const parsed =
+      JSON.parse(saved);
+
+    if(!Array.isArray(parsed)){
+
+      habits = [];
+
+      return;
+    }
+
+    /*
+      Normalize old habits so
+      existing data doesn't break.
+    */
+
+    habits =
+      parsed.map(function(habit){
+
+        const safeHabit = {
+
+          id:
+            habit.id ||
+            createId(),
+
+          name:
+            String(
+              habit.name ||
+              "Unnamed habit"
+            ),
+
+          days:
+            Number(habit.days) > 0
+              ? Number(habit.days)
+              : 1,
+
+          done:
+            Array.isArray(habit.done)
+              ? habit.done
+              : [],
+
+          createdAt:
+            habit.createdAt ||
+            new Date().toISOString()
+
+        };
+
+
+        /*
+          Make sure done array has
+          exactly enough positions.
+        */
+
+        while(
+          safeHabit.done.length <
+          safeHabit.days
+        ){
+
+          safeHabit.done.push(false);
+
+        }
+
+
+        if(
+          safeHabit.done.length >
+          safeHabit.days
+        ){
+
+          safeHabit.done =
+            safeHabit.done.slice(
+              0,
+              safeHabit.days
+            );
+
+        }
+
+
+        return safeHabit;
+
+      });
+
 
   }catch(error){
 
@@ -1239,13 +1395,299 @@ function saveHabits(){
 }
 
 
-/* =========================
+/* ==================================================
    HELPERS
-========================= */
+================================================== */
 
 function createId(){
 
-  return Date.now().toString(36)
+  return (
+    Date.now().toString(36)
     +
     Math.random()
-      .toString(
+      .toString(36)
+      .slice(2)
+  );
+
+}
+
+
+function getHabit(id){
+
+  return habits.find(
+    function(habit){
+
+      return habit.id === id;
+
+    }
+  );
+
+}
+
+
+function getDoneCount(habit){
+
+  if(
+    !habit ||
+    !Array.isArray(habit.done)
+  ){
+
+    return 0;
+
+  }
+
+  return habit.done.filter(
+    function(value){
+
+      return value === true;
+
+    }
+  ).length;
+
+}
+
+
+function getProgress(habit){
+
+  if(
+    !habit ||
+    !habit.days
+  ){
+
+    return 0;
+
+  }
+
+  const done =
+    getDoneCount(habit);
+
+  return Math.round(
+    (done / habit.days) * 100
+  );
+
+}
+
+
+function escapeHTML(value){
+
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* ==================================================
+   HOME RENDER
+================================================== */
+
+function renderHome(){
+
+  habitList.innerHTML = "";
+
+
+  if(habits.length === 0){
+
+    const empty =
+      document.createElement("div");
+
+    empty.className =
+      "empty";
+
+    empty.innerHTML =
+      "No habits yet.<br>" +
+      "Tap <b>+</b> to create your first habit.";
+
+    habitList.appendChild(
+      empty
+    );
+
+    return;
+
+  }
+
+
+  habits.forEach(
+    function(habit){
+
+      const card =
+        document.createElement(
+          "button"
+        );
+
+      card.type = "button";
+
+      card.className =
+        "habit-card";
+
+      /*
+        Used by drag system.
+      */
+
+      card.dataset.id =
+        habit.id;
+
+
+      const done =
+        getDoneCount(habit);
+
+      const percent =
+        getProgress(habit);
+
+
+      card.innerHTML = `
+
+        <div class="drag-hint">
+          ⋮⋮
+        </div>
+
+        <div class="habit-title">
+          ${escapeHTML(habit.name)}
+        </div>
+
+        <div class="habit-info">
+          ${done} / ${habit.days}
+          days completed
+        </div>
+
+        <div class="progress-row">
+
+          <div class="progress-bar">
+
+            <div
+              class="progress-fill"
+              style="width:${percent}%">
+
+            </div>
+
+          </div>
+
+          <div class="progress-percent">
+            ${percent}%
+          </div>
+
+        </div>
+
+      `;
+
+
+      /*
+        Normal tap opens habit.
+      */
+
+      card.addEventListener(
+        "click",
+        function(){
+
+          /*
+            Don't open the habit
+            if user just dragged it.
+          */
+
+          if(
+            dragState.moved
+          ){
+
+            dragState.moved =
+              false;
+
+            return;
+
+          }
+
+          openHabit(
+            habit.id
+          );
+
+        }
+      );
+
+
+      /*
+        Long press + drag.
+      */
+
+      attachDragEvents(
+        card
+      );
+
+
+      habitList.appendChild(
+        card
+      );
+
+    }
+  );
+
+}
+
+
+/* ==================================================
+   OPEN HABIT
+================================================== */
+
+function openHabit(id){
+
+  const habit =
+    getHabit(id);
+
+  if(!habit){
+
+    return;
+
+  }
+
+  currentHabitId =
+    id;
+
+  deleteConfirm =
+    false;
+
+
+  homePage.classList.add(
+    "hidden"
+  );
+
+  habitPage.classList.remove(
+    "hidden"
+  );
+
+
+  deleteBtn.textContent =
+    "Delete habit";
+
+  deleteBtn.classList.remove(
+    "confirm"
+  );
+
+
+  renderHabit();
+
+}
+
+
+/* ==================================================
+   RENDER HABIT
+================================================== */
+
+function renderHabit(){
+
+  const habit =
+    getHabit(
+      currentHabitId
+    );
+
+  if(!habit){
+
+    goHome();
+
+    return;
+
+  }
+
+
+  habitTitle.textContent =
+ 
