@@ -4,27 +4,25 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-      content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-<meta name="theme-color" content="#e0342f">
+<meta
+  name="theme-color"
+  content="#17161a">
 
-<meta name="apple-mobile-web-app-capable" content="yes">
+<meta
+  name="apple-mobile-web-app-capable"
+  content="yes">
 
-<meta name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent">
-
-<meta name="apple-mobile-web-app-title"
-      content="Habit">
-
-<link rel="apple-touch-icon"
-      href="https://mrrehbar6-prog.github.io/icon-512.png">
-
-<!-- PWA MANIFEST -->
-<link rel="manifest"
-      href="https://mrrehbar6-prog.github.io/manifest.json">
+<meta
+  name="apple-mobile-web-app-status-bar-style"
+  content="black-translucent">
 
 <title>Habit Tracker</title>
+
+<link rel="manifest" href="manifest.json">
 
 <style>
 
@@ -43,13 +41,19 @@
   -webkit-tap-highlight-color:transparent;
 }
 
-html,body{
+html,
+body{
   margin:0;
   min-height:100%;
   background:var(--bg);
   color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,
-  "Segoe UI",Roboto,Arial,sans-serif;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
 }
 
 body{
@@ -58,7 +62,8 @@ body{
   overscroll-behavior:none;
 }
 
-button,input{
+button,
+input{
   font:inherit;
 }
 
@@ -80,13 +85,19 @@ button{
   inset:0;
   z-index:9999;
   background:var(--red);
+
   display:flex;
   align-items:center;
   justify-content:center;
+
   overflow:hidden;
+
   opacity:1;
   visibility:visible;
-  transition:opacity .35s ease,visibility .35s ease;
+
+  transition:
+    opacity .35s ease,
+    visibility .35s ease;
 }
 
 #splash.hide{
@@ -98,46 +109,65 @@ button{
 .splash-logo{
   width:108px;
   height:108px;
+
   border:9px solid var(--white);
   border-radius:25px;
+
   position:relative;
-  animation:splashIn .55s cubic-bezier(.2,.8,.2,1);
+
+  animation:
+    splashIn .55s cubic-bezier(.2,.8,.2,1);
 }
 
 .splash-logo:after{
   content:"";
+
   position:absolute;
   inset:17px;
+
   border:3px solid rgba(255,255,255,.18);
   border-radius:9px;
 }
 
 .splash-shine{
   position:absolute;
+
   width:180px;
   height:180px;
+
   border-radius:50%;
+
   background:rgba(255,255,255,.08);
+
   animation:shine 1.2s ease-out;
 }
 
 @keyframes splashIn{
+
   0%{
     opacity:0;
-    transform:scale(.65) rotate(-8deg);
+    transform:
+      scale(.65)
+      rotate(-8deg);
   }
 
   70%{
     opacity:1;
-    transform:scale(1.06) rotate(1deg);
+    transform:
+      scale(1.06)
+      rotate(1deg);
   }
 
   100%{
-    transform:scale(1) rotate(0);
+    transform:
+      scale(1)
+      rotate(0);
   }
+
 }
 
 @keyframes shine{
+
   from{
     transform:scale(.1);
     opacity:1;
@@ -147,6 +177,7 @@ button{
     transform:scale(3);
     opacity:0;
   }
+
 }
 
 
@@ -157,108 +188,254 @@ button{
 .app{
   max-width:520px;
   min-height:100vh;
+
   margin:auto;
-  padding:24px 18px 50px;
+
+  padding:
+    24px
+    18px
+    50px;
 }
 
 .header{
   display:flex;
+
   align-items:center;
   justify-content:space-between;
+
   margin-bottom:28px;
 }
 
 .header h1{
   margin:0;
+
   font-size:30px;
+
   letter-spacing:-.6px;
 }
 
 .add-btn{
   width:46px;
   height:46px;
+
   border:0;
   border-radius:14px;
+
   background:var(--red);
   color:#fff;
+
   font-size:28px;
   line-height:1;
-  box-shadow:0 8px 24px rgba(224,52,47,.22);
-  transition:transform .15s ease;
+
+  box-shadow:
+    0 8px 24px
+    rgba(224,52,47,.22);
+
+  transition:
+    transform .15s ease;
 }
 
 .add-btn:active{
   transform:scale(.91);
 }
 
+
+/* =========================
+   HABIT LIST
+========================= */
+
 .habit-list{
+
   display:flex;
+
   flex-direction:column;
+
   gap:12px;
+
+  position:relative;
 }
 
+
+/*
+  IMPORTANT:
+  touch-action: pan-y allows
+  normal vertical scrolling.
+*/
+
 .habit-card{
+
   width:100%;
+
   padding:18px;
+
   border:1px solid var(--line);
+
   border-radius:16px;
+
   background:var(--panel);
+
   color:var(--text);
+
   text-align:left;
-  transition:transform .15s ease,border-color .15s ease;
+
+  position:relative;
+
+  user-select:none;
+
+  -webkit-user-select:none;
+
+  touch-action:pan-y;
+
+  transition:
+    transform .15s ease,
+    border-color .15s ease,
+    opacity .15s ease,
+    box-shadow .15s ease;
 }
 
 .habit-card:active{
-  transform:scale(.975);
+  transform:scale(.985);
 }
 
+
+/*
+  Long-press dragging state
+*/
+
+.habit-card.dragging{
+
+  opacity:.72;
+
+  border-color:var(--red);
+
+  box-shadow:
+    0 12px 35px
+    rgba(0,0,0,.45);
+
+  transform:
+    scale(1.02);
+
+  z-index:1000;
+
+  touch-action:none;
+}
+
+
+/*
+  Small drag hint
+*/
+
+.drag-hint{
+
+  position:absolute;
+
+  top:14px;
+  right:14px;
+
+  color:#777277;
+
+  font-size:18px;
+
+  pointer-events:none;
+}
+
+
+/*
+  Show a subtle placeholder
+  when card is being moved
+*/
+
+.habit-card.drag-placeholder{
+
+  opacity:.25;
+
+  border:
+    2px dashed var(--red);
+
+  background:
+    rgba(224,52,47,.08);
+}
+
+
 .habit-title{
+
   font-size:20px;
+
   font-weight:700;
+
+  padding-right:28px;
 }
 
 .habit-info{
+
   margin-top:7px;
+
   color:var(--dim);
+
   font-size:14px;
 }
 
 .progress-row{
+
   display:flex;
+
   align-items:center;
+
   justify-content:space-between;
+
   gap:12px;
+
   margin-top:14px;
 }
 
 .progress-bar{
+
   flex:1;
+
   height:7px;
+
   background:#39363b;
+
   border-radius:99px;
+
   overflow:hidden;
 }
 
 .progress-fill{
+
   height:100%;
+
   width:0;
+
   background:var(--red);
+
   border-radius:99px;
-  transition:width .25s ease;
+
+  transition:
+    width .25s ease;
 }
 
 .progress-percent{
+
   min-width:44px;
+
   text-align:right;
+
   color:var(--red);
+
   font-size:14px;
+
   font-weight:800;
 }
 
 .empty{
+
   color:var(--dim);
+
   text-align:center;
+
   padding:50px 20px;
+
   line-height:1.6;
 }
 
@@ -268,86 +445,139 @@ button{
 ========================= */
 
 .back-btn{
+
   background:none;
+
   border:0;
+
   color:var(--text);
+
   font-size:16px;
+
   padding:0;
+
   margin-bottom:24px;
 }
 
 .habit-heading{
+
   font-size:30px;
+
   font-weight:750;
+
   margin-bottom:8px;
+
   word-break:break-word;
 }
 
 .locked-days{
+
   color:var(--dim);
+
   font-size:15px;
+
   margin-bottom:24px;
 }
 
 .count{
+
   font-size:16px;
+
   margin-bottom:12px;
 }
 
 .count b{
+
   color:var(--red);
+
   font-size:21px;
 }
 
 .big-progress{
+
   display:flex;
+
   align-items:center;
+
   gap:12px;
+
   margin-bottom:24px;
 }
 
 .big-progress-bar{
+
   flex:1;
+
   height:10px;
+
   background:#39363b;
+
   border-radius:99px;
+
   overflow:hidden;
 }
 
 .big-progress-fill{
+
   height:100%;
+
   width:0;
+
   background:var(--red);
+
   border-radius:99px;
-  transition:width .28s ease;
+
+  transition:
+    width .28s ease;
 }
 
 .big-progress-percent{
+
   color:var(--red);
+
   font-size:18px;
+
   font-weight:800;
+
   min-width:48px;
+
   text-align:right;
 }
 
 .grid{
+
   display:grid;
-  grid-template-columns:repeat(6,1fr);
+
+  grid-template-columns:
+    repeat(6,1fr);
+
   gap:8px;
+
   margin-bottom:30px;
 }
 
 .cell{
+
   aspect-ratio:1;
-  border:2px solid #4b474d;
+
+  border:
+    2px solid #4b474d;
+
   border-radius:10px;
+
   display:flex;
+
   align-items:center;
   justify-content:center;
+
   background:#242227;
+
   color:#f2ede6;
+
   font-size:16px;
+
   font-weight:700;
+
   user-select:none;
 
   transition:
@@ -357,26 +587,39 @@ button{
 }
 
 .cell.done{
+
   background:var(--red);
+
   border-color:var(--red);
+
   color:#fff;
 }
 
 .cell:active{
+
   transform:scale(.92);
 }
 
 .delete-btn{
+
   width:100%;
+
   padding:13px;
-  border:1px solid var(--line);
+
+  border:
+    1px solid var(--line);
+
   border-radius:10px;
+
   background:transparent;
+
   color:var(--dim);
 }
 
 .delete-btn.confirm{
+
   border-color:var(--red);
+
   color:var(--red);
 }
 
@@ -386,90 +629,156 @@ button{
 ========================= */
 
 .overlay{
+
   position:fixed;
+
   inset:0;
-  background:rgba(0,0,0,.68);
+
+  background:
+    rgba(0,0,0,.68);
+
   display:none;
+
   align-items:flex-end;
+
   justify-content:center;
+
   z-index:100;
 }
 
 .overlay.show{
+
   display:flex;
 }
 
 .modal{
+
   width:min(520px,100%);
+
   background:var(--panel);
-  border-radius:20px 20px 0 0;
-  padding:24px 20px calc(24px + env(safe-area-inset-bottom));
-  animation:modalIn .22s ease-out;
+
+  border-radius:
+    20px
+    20px
+    0
+    0;
+
+  padding:
+    24px
+    20px
+    calc(
+      24px +
+      env(safe-area-inset-bottom)
+    );
+
+  animation:
+    modalIn .22s ease-out;
 }
 
 @keyframes modalIn{
+
   from{
-    transform:translateY(25px);
+
+    transform:
+      translateY(25px);
+
     opacity:0;
   }
 
   to{
-    transform:translateY(0);
+
+    transform:
+      translateY(0);
+
     opacity:1;
   }
+
 }
 
 .modal h2{
-  margin:0 0 22px;
+
+  margin:
+    0
+    0
+    22px;
+
   font-size:22px;
 }
 
 .label{
+
   display:block;
+
   color:var(--dim);
+
   font-size:13px;
+
   margin-bottom:7px;
 }
 
 .input{
+
   width:100%;
+
   padding:13px 0;
+
   border:0;
-  border-bottom:2px solid var(--line);
+
+  border-bottom:
+    2px solid var(--line);
+
   outline:none;
+
   background:transparent;
+
   color:var(--text);
 }
 
 .input:focus{
-  border-bottom-color:var(--red);
+
+  border-bottom-color:
+    var(--red);
 }
 
 .days-input{
+
   margin-top:20px;
 }
 
 .modal-actions{
+
   display:flex;
+
   gap:10px;
+
   margin-top:25px;
 }
 
 .modal-actions button{
+
   flex:1;
+
   padding:13px;
+
   border-radius:9px;
 }
 
 .cancel{
-  border:1px solid var(--line);
+
+  border:
+    1px solid var(--line);
+
   background:transparent;
+
   color:var(--dim);
 }
 
 .create{
+
   border:0;
+
   background:var(--red);
+
   color:#fff;
 }
 
@@ -477,10 +786,13 @@ button{
 
 </head>
 
+
 <body>
 
 
-<!-- SPLASH -->
+<!-- =========================
+     SPLASH
+========================= -->
 
 <div id="splash">
 
@@ -494,86 +806,124 @@ button{
 <div class="app">
 
 
-  <!-- HOME -->
+  <!-- =========================
+       HOME
+  ========================= -->
 
   <section id="homePage">
 
     <div class="header">
 
-      <h1>My Habits</h1>
+      <h1>
+        My Habits
+      </h1>
 
       <button
         class="add-btn"
         id="addHabitBtn"
         type="button">
+
         +
+
       </button>
 
     </div>
 
+
     <div
       class="habit-list"
       id="habitList">
+
     </div>
 
   </section>
 
 
-  <!-- HABIT PAGE -->
 
-  <section id="habitPage" class="hidden">
+  <!-- =========================
+       HABIT PAGE
+  ========================= -->
+
+  <section
+    id="habitPage"
+    class="hidden">
+
 
     <button
       class="back-btn"
       id="backBtn"
       type="button">
+
       ← Back
+
     </button>
+
 
     <div
       class="habit-heading"
       id="habitTitle">
+
     </div>
+
 
     <div class="locked-days">
 
       <span id="habitDays"></span>
+
       days · 🔒 fixed after creation
 
     </div>
 
+
     <div class="count">
 
-      <b id="doneCount">0</b>
+      <b id="doneCount">
+        0
+      </b>
+
       /
-      <span id="totalCount">0</span>
+
+      <span id="totalCount">
+        0
+      </span>
+
       days done
 
     </div>
 
+
     <div class="big-progress">
+
 
       <div class="big-progress-bar">
 
         <div
           class="big-progress-fill"
           id="bigProgressFill">
+
         </div>
 
       </div>
 
+
       <div
         class="big-progress-percent"
         id="bigProgressPercent">
+
         0%
+
       </div>
 
+
     </div>
+
 
     <div
       class="grid"
       id="dayGrid">
+
     </div>
+
 
     <button
       class="delete-btn"
@@ -584,25 +934,37 @@ button{
 
     </button>
 
+
   </section>
 
 
 </div>
 
 
-<!-- CREATE HABIT -->
+
+<!-- =========================
+     CREATE HABIT MODAL
+========================= -->
 
 <div
   class="overlay"
   id="overlay">
 
+
   <div class="modal">
 
-    <h2>Create habit</h2>
+
+    <h2>
+      Create habit
+    </h2>
+
 
     <label class="label">
+
       Habit name
+
     </label>
+
 
     <input
       class="input"
@@ -614,9 +976,13 @@ button{
 
     <div class="days-input">
 
+
       <label class="label">
+
         How many days?
+
       </label>
+
 
       <input
         class="input"
@@ -627,30 +993,40 @@ button{
         inputmode="numeric"
         placeholder="Example: 30">
 
+
     </div>
 
 
     <div class="modal-actions">
 
+
       <button
         class="cancel"
         id="cancelBtn"
         type="button">
+
         Cancel
+
       </button>
+
 
       <button
         class="create"
         id="createBtn"
         type="button">
+
         Create
+
       </button>
 
+
     </div>
+
 
   </div>
 
 </div>
+
 
 
 <script>
@@ -667,11 +1043,39 @@ button{
 const STORAGE_KEY =
   "habit_tracker_v3";
 
+
 let habits = [];
 
-let currentHabitId = null;
+let currentHabitId =
+  null;
 
-let deleteConfirm = false;
+let deleteConfirm =
+  false;
+
+
+/* =========================
+   DRAG STATE
+========================= */
+
+let dragState = {
+
+  card:null,
+
+  id:null,
+
+  pointerId:null,
+
+  startX:0,
+
+  startY:0,
+
+  timer:null,
+
+  dragging:false,
+
+  moved:false
+
+};
 
 
 /* =========================
@@ -679,65 +1083,103 @@ let deleteConfirm = false;
 ========================= */
 
 const splash =
-  document.getElementById("splash");
+  document.getElementById(
+    "splash"
+  );
 
 const homePage =
-  document.getElementById("homePage");
+  document.getElementById(
+    "homePage"
+  );
 
 const habitPage =
-  document.getElementById("habitPage");
+  document.getElementById(
+    "habitPage"
+  );
 
 const habitList =
-  document.getElementById("habitList");
+  document.getElementById(
+    "habitList"
+  );
 
 const addHabitBtn =
-  document.getElementById("addHabitBtn");
+  document.getElementById(
+    "addHabitBtn"
+  );
 
 const overlay =
-  document.getElementById("overlay");
+  document.getElementById(
+    "overlay"
+  );
 
 const newHabitName =
-  document.getElementById("newHabitName");
+  document.getElementById(
+    "newHabitName"
+  );
 
 const newHabitDays =
-  document.getElementById("newHabitDays");
+  document.getElementById(
+    "newHabitDays"
+  );
 
 const cancelBtn =
-  document.getElementById("cancelBtn");
+  document.getElementById(
+    "cancelBtn"
+  );
 
 const createBtn =
-  document.getElementById("createBtn");
+  document.getElementById(
+    "createBtn"
+  );
 
 const backBtn =
-  document.getElementById("backBtn");
+  document.getElementById(
+    "backBtn"
+  );
 
 const habitTitle =
-  document.getElementById("habitTitle");
+  document.getElementById(
+    "habitTitle"
+  );
 
 const habitDays =
-  document.getElementById("habitDays");
+  document.getElementById(
+    "habitDays"
+  );
 
 const doneCount =
-  document.getElementById("doneCount");
+  document.getElementById(
+    "doneCount"
+  );
 
 const totalCount =
-  document.getElementById("totalCount");
+  document.getElementById(
+    "totalCount"
+  );
 
 const dayGrid =
-  document.getElementById("dayGrid");
+  document.getElementById(
+    "dayGrid"
+  );
 
 const bigProgressFill =
-  document.getElementById("bigProgressFill");
+  document.getElementById(
+    "bigProgressFill"
+  );
 
 const bigProgressPercent =
-  document.getElementById("bigProgressPercent");
+  document.getElementById(
+    "bigProgressPercent"
+  );
 
 const deleteBtn =
-  document.getElementById("deleteBtn");
+  document.getElementById(
+    "deleteBtn"
+  );
 
 
 /* =========================
-   STORAGE
+   STORAGE FUNCTIONS
 ========================= */
 
 function loadHabits(){
@@ -745,7 +1187,9 @@ function loadHabits(){
   try{
 
     const saved =
-      localStorage.getItem(STORAGE_KEY);
+      localStorage.getItem(
+        STORAGE_KEY
+      );
 
     if(saved){
 
@@ -753,7 +1197,9 @@ function loadHabits(){
         JSON.parse(saved);
 
       if(Array.isArray(parsed)){
+
         habits = parsed;
+
       }
 
     }
@@ -802,693 +1248,4 @@ function createId(){
   return Date.now().toString(36)
     +
     Math.random()
-      .toString(36)
-      .slice(2);
-
-}
-
-
-function getHabit(id){
-
-  return habits.find(
-    habit => habit.id === id
-  );
-
-}
-
-
-function getDoneCount(habit){
-
-  if(
-    !habit ||
-    !Array.isArray(habit.done)
-  ){
-
-    return 0;
-
-  }
-
-  return habit.done.filter(
-    value => value === true
-  ).length;
-
-}
-
-
-function getProgress(habit){
-
-  if(
-    !habit ||
-    !habit.days
-  ){
-
-    return 0;
-
-  }
-
-  const done =
-    getDoneCount(habit);
-
-  return Math.round(
-    (done / habit.days) * 100
-  );
-
-}
-
-
-/* =========================
-   HOME
-========================= */
-
-function renderHome(){
-
-  habitList.innerHTML = "";
-
-  if(habits.length === 0){
-
-    const empty =
-      document.createElement("div");
-
-    empty.className = "empty";
-
-    empty.innerHTML =
-      "No habits yet.<br>" +
-      "Tap <b>+</b> to create your first habit.";
-
-    habitList.appendChild(empty);
-
-    return;
-
-  }
-
-
-  habits.forEach(habit => {
-
-    const card =
-      document.createElement("button");
-
-    card.type = "button";
-
-    card.className =
-      "habit-card";
-
-    const done =
-      getDoneCount(habit);
-
-    const percent =
-      getProgress(habit);
-
-    card.innerHTML = `
-
-      <div class="habit-title">
-        ${escapeHTML(habit.name)}
-      </div>
-
-      <div class="habit-info">
-        ${done} / ${habit.days} days completed
-      </div>
-
-      <div class="progress-row">
-
-        <div class="progress-bar">
-
-          <div
-            class="progress-fill"
-            style="width:${percent}%">
-          </div>
-
-        </div>
-
-        <div class="progress-percent">
-          ${percent}%
-        </div>
-
-      </div>
-
-    `;
-
-
-    card.addEventListener(
-      "click",
-      function(){
-
-        openHabit(habit.id);
-
-      }
-    );
-
-
-    habitList.appendChild(card);
-
-  });
-
-}
-
-
-/* =========================
-   HABIT PAGE
-========================= */
-
-function openHabit(id){
-
-  const habit =
-    getHabit(id);
-
-  if(!habit){
-    return;
-  }
-
-  currentHabitId = id;
-
-  deleteConfirm = false;
-
-  homePage.classList.add(
-    "hidden"
-  );
-
-  habitPage.classList.remove(
-    "hidden"
-  );
-
-  deleteBtn.textContent =
-    "Delete habit";
-
-  deleteBtn.classList.remove(
-    "confirm"
-  );
-
-  renderHabit();
-
-}
-
-
-function renderHabit(){
-
-  const habit =
-    getHabit(currentHabitId);
-
-  if(!habit){
-
-    goHome();
-
-    return;
-
-  }
-
-
-  habitTitle.textContent =
-    habit.name;
-
-  habitDays.textContent =
-    habit.days;
-
-  totalCount.textContent =
-    habit.days;
-
-
-  const done =
-    getDoneCount(habit);
-
-  const percent =
-    getProgress(habit);
-
-
-  doneCount.textContent =
-    done;
-
-  bigProgressFill.style.width =
-    percent + "%";
-
-  bigProgressPercent.textContent =
-    percent + "%";
-
-
-  dayGrid.innerHTML = "";
-
-
-  for(
-    let i = 0;
-    i < habit.days;
-    i++
-  ){
-
-    const cell =
-      document.createElement("button");
-
-    cell.type = "button";
-
-    cell.className =
-      "cell";
-
-
-    if(habit.done[i]){
-
-      cell.classList.add(
-        "done"
-      );
-
-    }
-
-
-    cell.textContent =
-      i + 1;
-
-
-    cell.addEventListener(
-      "click",
-      function(){
-
-        toggleDay(i);
-
-      }
-    );
-
-
-    dayGrid.appendChild(cell);
-
-  }
-
-}
-
-
-function toggleDay(index){
-
-  const habit =
-    getHabit(currentHabitId);
-
-  if(!habit){
-    return;
-  }
-
-
-  habit.done[index] =
-    !habit.done[index];
-
-
-  saveHabits();
-
-  renderHabit();
-
-  renderHome();
-
-}
-
-
-/* =========================
-   CREATE HABIT
-========================= */
-
-function openCreate(){
-
-  overlay.classList.add(
-    "show"
-  );
-
-  newHabitName.value = "";
-
-  newHabitDays.value = "";
-
-
-  setTimeout(
-    function(){
-
-      newHabitName.focus();
-
-    },
-    100
-  );
-
-}
-
-
-function closeCreate(){
-
-  overlay.classList.remove(
-    "show"
-  );
-
-  newHabitName.value = "";
-
-  newHabitDays.value = "";
-
-}
-
-
-function createHabit(){
-
-  const name =
-    newHabitName.value.trim();
-
-  const days =
-    parseInt(
-      newHabitDays.value,
-      10
-    );
-
-
-  if(!name){
-
-    alert(
-      "Please enter a habit name."
-    );
-
-    newHabitName.focus();
-
-    return;
-
-  }
-
-
-  if(!days || days < 1){
-
-    alert(
-      "Please enter a valid number of days."
-    );
-
-    newHabitDays.focus();
-
-    return;
-
-  }
-
-
-  if(days > 3650){
-
-    alert(
-      "Maximum is 3650 days."
-    );
-
-    return;
-
-  }
-
-
-  const habit = {
-
-    id: createId(),
-
-    name: name,
-
-    days: days,
-
-    done:
-      new Array(days).fill(false),
-
-    createdAt:
-      new Date().toISOString()
-
-  };
-
-
-  habits.push(habit);
-
-  saveHabits();
-
-  closeCreate();
-
-  renderHome();
-
-  openHabit(habit.id);
-
-}
-
-
-/* =========================
-   DELETE
-========================= */
-
-function deleteCurrentHabit(){
-
-  if(!currentHabitId){
-    return;
-  }
-
-
-  if(!deleteConfirm){
-
-    deleteConfirm = true;
-
-    deleteBtn.textContent =
-      "Tap again to delete";
-
-    deleteBtn.classList.add(
-      "confirm"
-    );
-
-    return;
-
-  }
-
-
-  habits =
-    habits.filter(
-      habit =>
-        habit.id !== currentHabitId
-    );
-
-
-  saveHabits();
-
-
-  currentHabitId = null;
-
-  deleteConfirm = false;
-
-
-  goHome();
-
-}
-
-
-/* =========================
-   NAVIGATION
-========================= */
-
-function goHome(){
-
-  currentHabitId = null;
-
-  deleteConfirm = false;
-
-
-  habitPage.classList.add(
-    "hidden"
-  );
-
-  homePage.classList.remove(
-    "hidden"
-  );
-
-
-  renderHome();
-
-}
-
-
-/* =========================
-   ESCAPE HTML
-========================= */
-
-function escapeHTML(value){
-
-  return String(value)
-
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-
-    .replace(
-      /</g,
-      "&lt;"
-    )
-
-    .replace(
-      />/g,
-      "&gt;"
-    )
-
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
-}
-
-
-/* =========================
-   EVENTS
-========================= */
-
-addHabitBtn.addEventListener(
-  "click",
-  openCreate
-);
-
-
-cancelBtn.addEventListener(
-  "click",
-  closeCreate
-);
-
-
-createBtn.addEventListener(
-  "click",
-  createHabit
-);
-
-
-backBtn.addEventListener(
-  "click",
-  goHome
-);
-
-
-deleteBtn.addEventListener(
-  "click",
-  deleteCurrentHabit
-);
-
-
-overlay.addEventListener(
-  "click",
-  function(event){
-
-    if(
-      event.target === overlay
-    ){
-
-      closeCreate();
-
-    }
-
-  }
-);
-
-
-newHabitName.addEventListener(
-  "keydown",
-  function(event){
-
-    if(
-      event.key === "Enter"
-    ){
-
-      newHabitDays.focus();
-
-    }
-
-  }
-);
-
-
-newHabitDays.addEventListener(
-  "keydown",
-  function(event){
-
-    if(
-      event.key === "Enter"
-    ){
-
-      createHabit();
-
-    }
-
-  }
-);
-
-
-/* =========================
-   START APP
-========================= */
-
-loadHabits();
-
-renderHome();
-
-
-window.addEventListener(
-  "load",
-  function(){
-
-    setTimeout(
-      function(){
-
-        splash.classList.add(
-          "hide"
-        );
-
-      },
-      1200
-    );
-
-  }
-);
-
-
-setTimeout(
-  function(){
-
-    splash.classList.add(
-      "hide"
-    );
-
-  },
-  2000
-);
-
-
-/* =========================
-   SERVICE WORKER
-========================= */
-
-if(
-  "serviceWorker" in navigator
-){
-
-  window.addEventListener(
-    "load",
-    function(){
-
-      navigator.serviceWorker
-        .register(
-          "https://mrrehbar6-prog.github.io/sw.js"
-        )
-
-        .then(
-          function(){
-
-            console.log(
-              "Service worker registered."
-            );
-
-          }
-        )
-
-        .catch(
-          function(error){
-
-            console.log(
-              "Service worker registration failed:",
-              error
-            );
-
-          }
-        );
-
-    }
-  );
-
-}
-
-})();
-
-</script>
-
-</body>
-</html>
+      .toString(
