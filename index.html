@@ -1,1828 +1,335 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-
-<meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1,viewport-fit=cover">
-
-<meta
-  name="theme-color"
-  content="#17161a">
-
-<meta
-  name="apple-mobile-web-app-capable"
-  content="yes">
-
-<meta
-  name="apple-mobile-web-app-status-bar-style"
-  content="black-translucent">
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17161a">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>Habit Tracker</title>
-
 <link rel="manifest" href="manifest.json">
-
 <style>
-
-:root{
-  --bg:#17161a;
-  --panel:#211f24;
-  --line:#49454b;
-  --text:#f2ede6;
-  --dim:#9b969b;
-  --red:#e0342f;
-  --white:#fff;
-}
-
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
-html,
-body{
-  margin:0;
-  min-height:100%;
-  background:var(--bg);
-  color:var(--text);
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Arial,
-    sans-serif;
-}
-
-body{
-  padding-top:env(safe-area-inset-top);
-  padding-bottom:env(safe-area-inset-bottom);
-  overscroll-behavior:none;
-}
-
-button,
-input{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-.hidden{
-  display:none!important;
-}
-
-
-/* =========================
-   SPLASH
-========================= */
-
-#splash{
-  position:fixed;
-  inset:0;
-  z-index:9999;
-  background:var(--red);
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  overflow:hidden;
-
-  opacity:1;
-  visibility:visible;
-
-  transition:
-    opacity .35s ease,
-    visibility .35s ease;
-}
-
-#splash.hide{
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-}
-
-.splash-logo{
-  width:108px;
-  height:108px;
-
-  border:9px solid var(--white);
-  border-radius:25px;
-
-  position:relative;
-
-  animation:
-    splashIn .55s cubic-bezier(.2,.8,.2,1);
-}
-
-.splash-logo:after{
-  content:"";
-
-  position:absolute;
-  inset:17px;
-
-  border:3px solid rgba(255,255,255,.18);
-  border-radius:9px;
-}
-
-.splash-shine{
-  position:absolute;
-
-  width:180px;
-  height:180px;
-
-  border-radius:50%;
-
-  background:rgba(255,255,255,.08);
-
-  animation:shine 1.2s ease-out;
-}
-
-@keyframes splashIn{
-
-  0%{
-    opacity:0;
-    transform:
-      scale(.65)
-      rotate(-8deg);
-  }
-
-  70%{
-    opacity:1;
-    transform:
-      scale(1.06)
-      rotate(1deg);
-  }
-
-  100%{
-    transform:
-      scale(1)
-      rotate(0);
-  }
-
-}
-
-@keyframes shine{
-
-  from{
-    transform:scale(.1);
-    opacity:1;
-  }
-
-  to{
-    transform:scale(3);
-    opacity:0;
-  }
-
-}
-
-
-/* =========================
-   APP
-========================= */
-
-.app{
-  max-width:520px;
-  min-height:100vh;
-
-  margin:auto;
-
-  padding:
-    24px
-    18px
-    50px;
-}
-
-.header{
-  display:flex;
-
-  align-items:center;
-  justify-content:space-between;
-
-  margin-bottom:28px;
-}
-
-.header h1{
-  margin:0;
-
-  font-size:30px;
-
-  letter-spacing:-.6px;
-}
-
-.add-btn{
-  width:46px;
-  height:46px;
-
-  border:0;
-  border-radius:14px;
-
-  background:var(--red);
-  color:#fff;
-
-  font-size:28px;
-  line-height:1;
-
-  box-shadow:
-    0 8px 24px
-    rgba(224,52,47,.22);
-
-  transition:
-    transform .15s ease;
-}
-
-.add-btn:active{
-  transform:scale(.91);
-}
-
-
-/* =========================
-   HABIT LIST
-========================= */
-
-.habit-list{
-
-  display:flex;
-
-  flex-direction:column;
-
-  gap:12px;
-
-  position:relative;
-}
-
-
-/* =========================
-   HABIT CARD
-========================= */
-
-.habit-card{
-
-  width:100%;
-
-  padding:18px;
-
-  border:1px solid var(--line);
-
-  border-radius:16px;
-
-  background:var(--panel);
-
-  color:var(--text);
-
-  text-align:left;
-
-  position:relative;
-
-  user-select:none;
-  -webkit-user-select:none;
-
-  /*
-    Important:
-    We handle dragging ourselves.
-  */
-  touch-action:none;
-
-  transition:
-    transform .15s ease,
-    border-color .15s ease,
-    opacity .15s ease,
-    box-shadow .15s ease;
-}
-
-.habit-card:active{
-  transform:scale(.985);
-}
-
-
-/* Dragging card */
-
-.habit-card.dragging{
-
-  opacity:.78;
-
-  border-color:var(--red);
-
-  box-shadow:
-    0 15px 40px
-    rgba(0,0,0,.50);
-
-  transform:
-    scale(1.02);
-
-  z-index:1000;
-}
-
-
-/* Drag handle */
-
-.drag-hint{
-
-  position:absolute;
-
-  top:15px;
-  right:15px;
-
-  color:#777277;
-
-  font-size:19px;
-
-  pointer-events:none;
-}
-
-
-/* Placeholder */
-
-.habit-card.drag-placeholder{
-
-  opacity:.25;
-
-  border:
-    2px dashed var(--red);
-
-  background:
-    rgba(224,52,47,.08);
-}
-
-
-/* Content */
-
-.habit-title{
-
-  font-size:20px;
-
-  font-weight:700;
-
-  padding-right:32px;
-}
-
-.habit-info{
-
-  margin-top:7px;
-
-  color:var(--dim);
-
-  font-size:14px;
-}
-
-.progress-row{
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:space-between;
-
-  gap:12px;
-
-  margin-top:14px;
-}
-
-.progress-bar{
-
-  flex:1;
-
-  height:7px;
-
-  background:#39363b;
-
-  border-radius:99px;
-
-  overflow:hidden;
-}
-
-.progress-fill{
-
-  height:100%;
-
-  width:0;
-
-  background:var(--red);
-
-  border-radius:99px;
-
-  transition:
-    width .25s ease;
-}
-
-.progress-percent{
-
-  min-width:44px;
-
-  text-align:right;
-
-  color:var(--red);
-
-  font-size:14px;
-
-  font-weight:800;
-}
-
-.empty{
-
-  color:var(--dim);
-
-  text-align:center;
-
-  padding:50px 20px;
-
-  line-height:1.6;
-}
-
-
-/* =========================
-   HABIT PAGE
-========================= */
-
-.back-btn{
-
-  background:none;
-
-  border:0;
-
-  color:var(--text);
-
-  font-size:16px;
-
-  padding:0;
-
-  margin-bottom:24px;
-}
-
-.habit-heading{
-
-  font-size:30px;
-
-  font-weight:750;
-
-  margin-bottom:8px;
-
-  word-break:break-word;
-}
-
-.locked-days{
-
-  color:var(--dim);
-
-  font-size:15px;
-
-  margin-bottom:24px;
-}
-
-.count{
-
-  font-size:16px;
-
-  margin-bottom:12px;
-}
-
-.count b{
-
-  color:var(--red);
-
-  font-size:21px;
-}
-
-.big-progress{
-
-  display:flex;
-
-  align-items:center;
-
-  gap:12px;
-
-  margin-bottom:24px;
-}
-
-.big-progress-bar{
-
-  flex:1;
-
-  height:10px;
-
-  background:#39363b;
-
-  border-radius:99px;
-
-  overflow:hidden;
-}
-
-.big-progress-fill{
-
-  height:100%;
-
-  width:0;
-
-  background:var(--red);
-
-  border-radius:99px;
-
-  transition:
-    width .28s ease;
-}
-
-.big-progress-percent{
-
-  color:var(--red);
-
-  font-size:18px;
-
-  font-weight:800;
-
-  min-width:48px;
-
-  text-align:right;
-}
-
-.grid{
-
-  display:grid;
-
-  grid-template-columns:
-    repeat(6,1fr);
-
-  gap:8px;
-
-  margin-bottom:30px;
-}
-
-.cell{
-
-  aspect-ratio:1;
-
-  border:
-    2px solid #4b474d;
-
-  border-radius:10px;
-
-  display:flex;
-
-  align-items:center;
-  justify-content:center;
-
-  background:#242227;
-
-  color:#f2ede6;
-
-  font-size:16px;
-
-  font-weight:700;
-
-  user-select:none;
-
-  transition:
-    transform .12s ease,
-    background .18s ease,
-    border-color .18s ease;
-}
-
-.cell.done{
-
-  background:var(--red);
-
-  border-color:var(--red);
-
-  color:#fff;
-}
-
-.cell:active{
-
-  transform:scale(.92);
-}
-
-.delete-btn{
-
-  width:100%;
-
-  padding:13px;
-
-  border:
-    1px solid var(--line);
-
-  border-radius:10px;
-
-  background:transparent;
-
-  color:var(--dim);
-}
-
-.delete-btn.confirm{
-
-  border-color:var(--red);
-
-  color:var(--red);
-}
-
-
-/* =========================
-   MODAL
-========================= */
-
-.overlay{
-
-  position:fixed;
-
-  inset:0;
-
-  background:
-    rgba(0,0,0,.68);
-
-  display:none;
-
-  align-items:flex-end;
-
-  justify-content:center;
-
-  z-index:100;
-}
-
-.overlay.show{
-
-  display:flex;
-}
-
-.modal{
-
-  width:min(520px,100%);
-
-  background:var(--panel);
-
-  border-radius:
-    20px
-    20px
-    0
-    0;
-
-  padding:
-    24px
-    20px
-    calc(
-      24px +
-      env(safe-area-inset-bottom)
-    );
-
-  animation:
-    modalIn .22s ease-out;
-}
-
-@keyframes modalIn{
-
-  from{
-
-    transform:
-      translateY(25px);
-
-    opacity:0;
-  }
-
-  to{
-
-    transform:
-      translateY(0);
-
-    opacity:1;
-  }
-
-}
-
-.modal h2{
-
-  margin:
-    0
-    0
-    22px;
-
-  font-size:22px;
-}
-
-.label{
-
-  display:block;
-
-  color:var(--dim);
-
-  font-size:13px;
-
-  margin-bottom:7px;
-}
-
-.input{
-
-  width:100%;
-
-  padding:13px 0;
-
-  border:0;
-
-  border-bottom:
-    2px solid var(--line);
-
-  outline:none;
-
-  background:transparent;
-
-  color:var(--text);
-}
-
-.input:focus{
-
-  border-bottom-color:
-    var(--red);
-}
-
-.days-input{
-
-  margin-top:20px;
-}
-
-.modal-actions{
-
-  display:flex;
-
-  gap:10px;
-
-  margin-top:25px;
-}
-
-.modal-actions button{
-
-  flex:1;
-
-  padding:13px;
-
-  border-radius:9px;
-}
-
-.cancel{
-
-  border:
-    1px solid var(--line);
-
-  background:transparent;
-
-  color:var(--dim);
-}
-
-.create{
-
-  border:0;
-
-  background:var(--red);
-
-  color:#fff;
-}
-
+:root{--bg:#17161a;--panel:#211f24;--line:#49454b;--text:#f2ede6;--dim:#9b969b;--red:#e0342f}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);overscroll-behavior:none}
+button,input{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+#splash{position:fixed;inset:0;z-index:99999;background:var(--red);display:flex;align-items:center;justify-content:center;opacity:1;visibility:visible;transition:.35s}
+#splash.hide{opacity:0;visibility:hidden;pointer-events:none}
+.splash-logo{width:108px;height:108px;border:9px solid #fff;border-radius:25px}
+
+.app{max-width:520px;min-height:100vh;margin:auto;padding:24px 18px 50px}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.header h1{margin:0;font-size:30px}
+.add-btn{width:46px;height:46px;border:0;border-radius:14px;background:var(--red);color:#fff;font-size:28px}
+
+.habit-list{display:flex;flex-direction:column;gap:12px}
+.habit-card{width:100%;padding:18px;border:1px solid var(--line);border-radius:16px;background:var(--panel);color:var(--text);text-align:left;position:relative;user-select:none;-webkit-user-select:none;touch-action:none;transition:.15s}
+.habit-card.dragging{opacity:.75;border-color:var(--red);box-shadow:0 15px 40px #0008;transform:scale(1.02);z-index:1000}
+.drag-hint{position:absolute;top:15px;right:15px;color:#777277;font-size:19px}
+.habit-title{font-size:20px;font-weight:700;padding-right:32px}
+.habit-info{margin-top:7px;color:var(--dim);font-size:14px}
+.progress-row{display:flex;align-items:center;gap:12px;margin-top:14px}
+.progress-bar{flex:1;height:7px;background:#39363b;border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;background:var(--red);border-radius:99px}
+.progress-percent{min-width:44px;text-align:right;color:var(--red);font-size:14px;font-weight:800}
+.empty{color:var(--dim);text-align:center;padding:50px 20px;line-height:1.6}
+
+.back-btn{background:none;border:0;color:var(--text);font-size:16px;padding:0;margin-bottom:24px}
+.habit-heading{font-size:30px;font-weight:750;margin-bottom:8px;word-break:break-word}
+.locked-days{color:var(--dim);font-size:15px;margin-bottom:24px}
+.count{font-size:16px;margin-bottom:12px}
+.count b{color:var(--red);font-size:21px}
+.big-progress{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.big-progress-bar{flex:1;height:10px;background:#39363b;border-radius:99px;overflow:hidden}
+.big-progress-fill{height:100%;background:var(--red);border-radius:99px}
+.big-progress-percent{color:var(--red);font-size:18px;font-weight:800;min-width:48px;text-align:right}
+
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:30px}
+.cell{aspect-ratio:1;border:2px solid #4b474d;border-radius:10px;display:flex;align-items:center;justify-content:center;background:#242227;color:#f2ede6;font-size:16px;font-weight:700}
+.cell.done{background:var(--red);border-color:var(--red);color:#fff}
+
+.delete-btn{width:100%;padding:13px;border:1px solid var(--line);border-radius:10px;background:transparent;color:var(--dim)}
+.delete-btn.confirm{border-color:var(--red);color:var(--red)}
+
+.overlay{position:fixed;inset:0;background:#000b;display:none;align-items:flex-end;justify-content:center;z-index:100}
+.overlay.show{display:flex}
+.modal{width:min(520px,100%);background:var(--panel);border-radius:20px 20px 0 0;padding:24px 20px calc(24px + env(safe-area-inset-bottom))}
+.modal h2{margin:0 0 22px;font-size:22px}
+.label{display:block;color:var(--dim);font-size:13px;margin-bottom:7px}
+.input{width:100%;padding:13px 0;border:0;border-bottom:2px solid var(--line);outline:none;background:transparent;color:var(--text)}
+.input:focus{border-bottom-color:var(--red)}
+.days-input{margin-top:20px}
+.modal-actions{display:flex;gap:10px;margin-top:25px}
+.modal-actions button{flex:1;padding:13px;border-radius:9px}
+.cancel{border:1px solid var(--line);background:transparent;color:var(--dim)}
+.create{border:0;background:var(--red);color:#fff}
 </style>
-
 </head>
-
 <body>
 
-
-<!-- =========================
-     SPLASH
-========================= -->
-
-<div id="splash">
-
-  <div class="splash-shine"></div>
-
-  <div class="splash-logo"></div>
-
-</div>
-
+<div id="splash"><div class="splash-logo"></div></div>
 
 <div class="app">
 
-
-  <!-- =========================
-       HOME
-  ========================= -->
-
   <section id="homePage">
-
     <div class="header">
-
-      <h1>
-        My Habits
-      </h1>
-
-      <button
-        class="add-btn"
-        id="addHabitBtn"
-        type="button">
-
-        +
-
-      </button>
-
+      <h1>My Habits</h1>
+      <button class="add-btn" id="addHabitBtn">+</button>
     </div>
-
-
-    <div
-      class="habit-list"
-      id="habitList">
-
-    </div>
-
+    <div class="habit-list" id="habitList"></div>
   </section>
 
-
-
-  <!-- =========================
-       HABIT PAGE
-  ========================= -->
-
-  <section
-    id="habitPage"
-    class="hidden">
-
-
-    <button
-      class="back-btn"
-      id="backBtn"
-      type="button">
-
-      ← Back
-
-    </button>
-
-
-    <div
-      class="habit-heading"
-      id="habitTitle">
-
-    </div>
-
-
-    <div class="locked-days">
-
-      <span id="habitDays"></span>
-
-      days · 🔒 fixed after creation
-
-    </div>
-
-
-    <div class="count">
-
-      <b id="doneCount">
-        0
-      </b>
-
-      /
-
-      <span id="totalCount">
-        0
-      </span>
-
-      days done
-
-    </div>
-
-
+  <section id="habitPage" class="hidden">
+    <button class="back-btn" id="backBtn">← Back</button>
+    <div class="habit-heading" id="habitTitle"></div>
+    <div class="locked-days"><span id="habitDays"></span> days · 🔒 fixed after creation</div>
+    <div class="count"><b id="doneCount">0</b> / <span id="totalCount">0</span> days done</div>
     <div class="big-progress">
-
-      <div class="big-progress-bar">
-
-        <div
-          class="big-progress-fill"
-          id="bigProgressFill">
-
-        </div>
-
-      </div>
-
-
-      <div
-        class="big-progress-percent"
-        id="bigProgressPercent">
-
-        0%
-
-      </div>
-
+      <div class="big-progress-bar"><div class="big-progress-fill" id="bigProgressFill"></div></div>
+      <div class="big-progress-percent" id="bigProgressPercent">0%</div>
     </div>
-
-
-    <div
-      class="grid"
-      id="dayGrid">
-
-    </div>
-
-
-    <button
-      class="delete-btn"
-      id="deleteBtn"
-      type="button">
-
-      Delete habit
-
-    </button>
-
-
+    <div class="grid" id="dayGrid"></div>
+    <button class="delete-btn" id="deleteBtn">Delete habit</button>
   </section>
 
-
 </div>
 
-
-
-<!-- =========================
-     CREATE HABIT MODAL
-========================= -->
-
-<div
-  class="overlay"
-  id="overlay">
-
-
+<div class="overlay" id="overlay">
   <div class="modal">
-
-
-    <h2>
-      Create habit
-    </h2>
-
-
-    <label class="label">
-
-      Habit name
-
-    </label>
-
-
-    <input
-      class="input"
-      id="newHabitName"
-      maxlength="40"
-      placeholder="Example: Study"
-      autocomplete="off">
-
-
+    <h2>Create habit</h2>
+    <label class="label">Habit name</label>
+    <input class="input" id="newHabitName" maxlength="40" placeholder="Example: Study">
     <div class="days-input">
-
-
-      <label class="label">
-
-        How many days?
-
-      </label>
-
-
-      <input
-        class="input"
-        id="newHabitDays"
-        type="number"
-        min="1"
-        max="3650"
-        inputmode="numeric"
-        placeholder="Example: 30">
-
-
+      <label class="label">How many days?</label>
+      <input class="input" id="newHabitDays" type="number" min="1" max="3650" placeholder="Example: 30">
     </div>
-
-
     <div class="modal-actions">
-
-
-      <button
-        class="cancel"
-        id="cancelBtn"
-        type="button">
-
-        Cancel
-
-      </button>
-
-
-      <button
-        class="create"
-        id="createBtn"
-        type="button">
-
-        Create
-
-      </button>
-
-
+      <button class="cancel" id="cancelBtn">Cancel</button>
+      <button class="create" id="createBtn">Create</button>
     </div>
-
-
   </div>
-
 </div>
-
-
 
 <script>
+(()=>{
+const K='habit_tracker_v3';
+let H=[],cur=null,confirmDel=false;
+const d={card:null,pointer:null,y:0,timer:null,active:false,moved:false};
+const $=x=>document.getElementById(x);
 
-(function(){
+function id(){return Date.now().toString(36)+'-'+Math.random().toString(36).slice(2)}
 
-"use strict";
+function load(){
+  try{
+    H=JSON.parse(localStorage.getItem(K)||'[]');
+    if(!Array.isArray(H))H=[];
+    H=H.map(h=>({
+      id:h.id||id(),
+      name:String(h.name||'Habit'),
+      days:Math.max(1,Number(h.days)||1),
+      done:Array.isArray(h.done)?h.done:[]
+    }));
+    H.forEach(h=>{
+      while(h.done.length<h.days)h.done.push(false);
+      h.done.length=h.days;
+    });
+  }catch(e){H=[]}
+}
+function save(){localStorage.setItem(K,JSON.stringify(H))}
+function get(x){return H.find(h=>h.id===x)}
+function n(h){return h.done.filter(Boolean).length}
+function p(h){return Math.round(n(h)/h.days*100)}
+function esc(x){
+  return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
 
+function home(){
+  let l=$('habitList');
+  l.innerHTML='';
+  if(!H.length){
+    l.innerHTML=' <div class="empty">No habits yet.<br>Tap <b>+</b> to create your first habit.</div>';
+    return;
+  }
+  H.forEach(h=>{
+    let c=document.createElement('button');
+    c.className='habit-card';
+    c.type='button';
+    c.dataset.id=h.id;
+    let q=p(h);
+    c.innerHTML=
+      '<div class="drag-hint">⋮⋮</div>'+
+      '<div class="habit-title">'+esc(h.name)+'</div>'+
+      '<div class="habit-info">'+n(h)+' / '+h.days+' days completed</div>'+
+      '<div class="progress-row">'+
+        '<div class="progress-bar"><div class="progress-fill" style="width:'+q+'%"></div></div>'+
+        '<div class="progress-percent">'+q+'%</div>'+
+      '</div>';
+    c.onclick=()=>{if(!d.moved)open(h.id)};
+    c.onpointerdown=down;
+    c.onpointermove=move;
+    c.onpointerup=up;
+    c.onpointercancel=cancel;
+    l.appendChild(c);
+  });
+}
 
-/* =========================
-   STORAGE
-========================= */
+function down(e){
+  if(e.pointerType==='mouse'&&e.button!==0)return;
+  clearTimeout(d.timer);
+  d.card=e.currentTarget;
+  d.pointer=e.pointerId;
+  d.y=e.clientY;
+  d.active=false;
+  d.moved=false;
+  d.timer=setTimeout(()=>{
+    if(d.card===e.currentTarget){
+      d.active=true;
+      d.moved=true;
+      d.card.classList.add('dragging');
+      document.body.style.overflow='hidden';
+      navigator.vibrate&&navigator.vibrate(20);
+    }
+  },350);
+  try{d.card.setPointerCapture(e.pointerId)}catch(_){}
+}
+function move(e){
+  if(d.card!==e.currentTarget||e.pointerId!==d.pointer)return;
+  if(!d.active){
+    if(Math.abs(e.clientY-d.y)>10){clearTimeout(d.timer);d.moved=true}
+    return;
+  }
+  e.preventDefault();
+  let z=document.elementFromPoint(e.clientX,e.clientY);
+  let t=z&&z.closest('.habit-card');
+  if(!t||t===d.card||t.parentElement!==$('habitList'))return;
+  let r=t.getBoundingClientRect();
+  e.clientY<r.top+r.height/2
+    ? $('habitList').insertBefore(d.card,t)
+    : $('habitList').insertBefore(d.card,t.nextSibling);
+}
+function order(){
+  let ids=[...$('habitList').querySelectorAll('.habit-card')].map(x=>x.dataset.id);
+  let m=new Map(H.map(h=>[h.id,h]));
+  H=ids.map(x=>m.get(x)).filter(Boolean);
+  save();
+}
+function up(e){
+  if(d.card!==e.currentTarget||e.pointerId!==d.pointer)return;
+  clearTimeout(d.timer);
+  let c=d.card;
+  if(d.active){
+    order();
+    c.classList.remove('dragging');
+    document.body.style.overflow='';
+    setTimeout(()=>d.moved=false,150);
+  }else d.moved=false;
+  d.card=null;d.pointer=null;d.timer=null;d.active=false;
+}
+function cancel(e){
+  if(d.card!==e.currentTarget)return;
+  clearTimeout(d.timer);
+  if(d.active){
+    d.card.classList.remove('dragging');
+    document.body.style.overflow='';
+  }
+  d.card=null;d.pointer=null;d.timer=null;d.active=false;d.moved=false;
+}
 
-const STORAGE_KEY =
-  "habit_tracker_v3";
+function open(x){
+  let h=get(x);
+  if(!h)return;
+  cur=x;
+  confirmDel=false;
+  $('homePage').classList.add('hidden');
+  $('habitPage').classList.remove('hidden');
+  $('deleteBtn').textContent='Delete habit';
+  $('deleteBtn').classList.remove('confirm');
+  render();
+}
+function render(){
+  let h=get(cur);
+  if(!h)return home();
+  $('habitTitle').textContent=h.name;
+  $('habitDays').textContent=h.days;
+  $('totalCount').textContent=h.days;
+  $('doneCount').textContent=n(h);
+  $('bigProgressFill').style.width=p(h)+'%';
+  $('bigProgressPercent').textContent=p(h)+'%';
+  let g=$('dayGrid');
+  g.innerHTML='';
+  for(let i=0;i<h.days;i++){
+    let b=document.createElement('button');
+    b.className='cell'+(h.done[i]?' done':'');
+    b.textContent=i+1;
+    b.onclick=()=>{
+      h.done[i]=!h.done[i];
+      save();
+      render();
+      home();
+    };
+    g.appendChild(b);
+  }
+}
 
+function create(){
+  let name=$('newHabitName').value.trim();
+  let days=parseInt($('newHabitDays').value,10);
+  if(!name){alert('Please enter a habit name.');return}
+  if(!Number.isFinite(days)||days<1||days>3650){
+    alert('Enter days between 1 and 3650.');
+    return;
+  }
+  let h={id:id(),name,days,done:new Array(days).fill(false)};
+  H.unshift(h);
+  save();
+  $('overlay').classList.remove('show');
+  home();
+  open(h.id);
+}
+function go(){
+  cur=null;
+  confirmDel=false;
+  $('habitPage').classList.add('hidden');
+  $('homePage').classList.remove('hidden');
+  home();
+}
+function del(){
+  if(!cur)return;
+  if(!confirmDel){
+    confirmDel=true;
+    $('deleteBtn').textContent='Tap again to delete';
+    $('deleteBtn').classList.add('confirm');
+    return;
+  }
+  H=H.filter(h=>h.id!==cur);
+  save();
+  go();
+}
 
-let habits = [];
-
-let currentHabitId =
-  null;
-
-let deleteConfirm =
-  false;
-
-
-/* =========================
-   DRAG STATE
-========================= */
-
-let dragState = {
-
-  card:null,
-
-  id:null,
-
-  pointerId:null,
-
-  startX:0,
-
-  startY:0,
-
-  timer:null,
-
-  dragging:false,
-
-  moved:false,
-
-  offsetY:0
-
+$('addHabitBtn').onclick=()=>{
+  $('overlay').classList.add('show');
+  $('newHabitName').value='';
+  $('newHabitDays').value='';
+  setTimeout(()=>$('newHabitName').focus(),100);
 };
-
-
-/* =========================
-   ELEMENTS
-========================= */
-
-const splash =
-  document.getElementById(
-    "splash"
-  );
-
-const homePage =
-  document.getElementById(
-    "homePage"
-  );
-
-const habitPage =
-  document.getElementById(
-    "habitPage"
-  );
-
-const habitList =
-  document.getElementById(
-    "habitList"
-  );
-
-const addHabitBtn =
-  document.getElementById(
-    "addHabitBtn"
-  );
-
-const overlay =
-  document.getElementById(
-    "overlay"
-  );
-
-const newHabitName =
-  document.getElementById(
-    "newHabitName"
-  );
-
-const newHabitDays =
-  document.getElementById(
-    "newHabitDays"
-  );
-
-const cancelBtn =
-  document.getElementById(
-    "cancelBtn"
-  );
-
-const createBtn =
-  document.getElementById(
-    "createBtn"
-  );
-
-const backBtn =
-  document.getElementById(
-    "backBtn"
-  );
-
-const habitTitle =
-  document.getElementById(
-    "habitTitle"
-  );
-
-const habitDays =
-  document.getElementById(
-    "habitDays"
-  );
-
-const doneCount =
-  document.getElementById(
-    "doneCount"
-  );
-
-const totalCount =
-  document.getElementById(
-    "totalCount"
-  );
-
-const dayGrid =
-  document.getElementById(
-    "dayGrid"
-  );
-
-const bigProgressFill =
-  document.getElementById(
-    "bigProgressFill"
-  );
-
-const bigProgressPercent =
-  document.getElementById(
-    "bigProgressPercent"
-  );
-
-const deleteBtn =
-  document.getElementById(
-    "deleteBtn"
-  );
-
-
-/* =========================
-   STORAGE
-========================= */
-
-function loadHabits(){
-
-  try{
-
-    const saved =
-      localStorage.getItem(
-        STORAGE_KEY
-      );
-
-    if(saved){
-
-      const parsed =
-        JSON.parse(saved);
-
-      if(Array.isArray(parsed)){
-
-        habits = parsed;
-
-      }
-
-    }
-
-  }catch(error){
-
-    console.error(
-      "Could not load habits:",
-      error
-    );
-
-    habits = [];
-
-  }
-
-}
-
-
-function saveHabits(){
-
-  try{
-
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(habits)
-    );
-
-  }catch(error){
-
-    console.error(
-      "Could not save habits:",
-      error
-    );
-
-  }
-
-}
-
-
-/* =========================
-   HELPERS
-========================= */
-
-function createId(){
-
-  return Date.now().toString(36)
-    +
-    Math.random()
-      .toString(36)
-      .slice(2);
-
-}
-
-
-function getHabit(id){
-
-  return habits.find(
-    habit =>
-      habit.id === id
-  );
-
-}
-
-
-function getDoneCount(habit){
-
-  if(
-    !habit ||
-    !Array.isArray(habit.done)
-  ){
-
-    return 0;
-
-  }
-
-  return habit.done.filter(
-    value =>
-      value === true
-  ).length;
-
-}
-
-
-function getProgress(habit){
-
-  if(
-    !habit ||
-    !habit.days
-  ){
-
-    return 0;
-
-  }
-
-  const done =
-    getDoneCount(habit);
-
-  return Math.round(
-    (done / habit.days) * 100
-  );
-
-}
-
-
-function escapeHTML(value){
-
-  return String(value)
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-    .replace(
-      /</g,
-      "&lt;"
-    )
-    .replace(
-      />/g,
-      "&gt;"
-    )
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
-}
-
-
-/* =========================
-   HOME
-========================= */
-
-function renderHome(){
-
-  habitList.innerHTML = "";
-
-
-  if(habits.length === 0){
-
-    const empty =
-      document.createElement(
-        "div"
-      );
-
-    empty.className =
-      "empty";
-
-    empty.innerHTML =
-      "No habits yet.<br>" +
-      "Tap <b>+</b> to create your first habit.";
-
-    habitList.appendChild(
-      empty
-    );
-
-    return;
-
-  }
-
-
-  habits.forEach(
-    function(habit){
-
-      const card =
-        document.createElement(
-          "button"
-        );
-
-      card.type =
-        "button";
-
-      card.className =
-        "habit-card";
-
-      card.dataset.id =
-        habit.id;
-
-
-      const done =
-        getDoneCount(
-          habit
-        );
-
-      const percent =
-        getProgress(
-          habit
-        );
-
-
-      card.innerHTML = `
-
-        <div class="drag-hint">
-          ⋮⋮
-        </div>
-
-        <div class="habit-title">
-          ${escapeHTML(habit.name)}
-        </div>
-
-        <div class="habit-info">
-          ${done} / ${habit.days}
-          days completed
-        </div>
-
-        <div class="progress-row">
-
-          <div class="progress-bar">
-
-            <div
-              class="progress-fill"
-              style="width:${percent}%">
-
-            </div>
-
-          </div>
-
-          <div class="progress-percent">
-            ${percent}%
-          </div>
-
-        </div>
-
-      `;
-
-
-      /*
-        Normal tap:
-        Open habit.
-      */
-
-      card.addEventListener(
-        "click",
-        function(){
-
-          if(
-            dragState.moved ||
-            dragState.dragging
-          ){
-
-            return;
-
-          }
-
-          openHabit(
-            habit.id
-          );
-
-        }
-      );
-
-
-      /*
-        Long press / drag.
-      */
-
-      card.addEventListener(
-        "pointerdown",
-        startDrag
-      );
-
-
-      card.addEventListener(
-        "pointermove",
-        moveDrag
-      );
-
-
-      card.addEventListener(
-        "pointerup",
-        endDrag
-      );
-
-
-      card.addEventListener(
-        "pointercancel",
-        cancelDrag
-      );
-
-
-      habitList.appendChild(
-        card
-      );
-
-    }
-  );
-
-}
-
-
-/* =========================
-   DRAG START
-========================= */
-
-function startDrag(event){
-
-  if(event.button !== 0 &&
-     event.pointerType === "mouse"){
-
-    return;
-
-  }
-
-
-  const card =
-    event.currentTarget;
-
-
-  dragState.card =
-    card;
-
-  dragState.id =
-    card.dataset.id;
-
-  dragState.pointerId =
-    event.pointerId;
-
-  dragState.startX =
-    event.clientX;
-
-  dragState.startY =
-    event.clientY;
-
-  dragState.dragging =
-    false;
-
-  dragState.moved =
-    false;
-
-
-  clearTimeout(
-    dragState.timer
-  );
-
-
-  /*
-    Long press:
-    350ms
-  */
-
-  dragState.timer =
-    setTimeout(
-      function(){
-
-        if(
-          dragState.card === card
-        ){
-
-          beginDragging();
-
-        }
-
-      },
-      350
-    );
-
-
-  try{
-
-    card.setPointerCapture(
-      event.pointerId
-    );
-
-  }catch(error){}
-
-}
-
-
-/* =========================
-   BEGIN DRAG
-========================= */
-
-function beginDragging(){
-
-  if(!dragState.card){
-
-    return;
-
-  }
-
-
-  dragState.dragging =
-    true;
-
-  dragState.moved =
-    true;
-
-
-  dragState.card.classList.add(
-    "dragging"
-  );
-
-
-  /*
-    Prevent page scrolling
-    while dragging.
-  */
-
-  document.body.style.overflow =
-    "hidden";
-
-}
-
-
-/* =========================
-   DRAG MOVE
-========================= */
-
-function moveDrag(event){
-
-  if(
-    !dragState.card ||
-    event.pointerId !==
-      dragState.pointerId
-  ){
-
-    return;
-
-  }
-
-
-  const dx =
-    event.clientX -
-    dragState.startX;
-
-  const dy =
-    event.clientY -
-    dragState.startY;
-
-
-  /*
-    If finger moves before
-    long press, cancel long press.
-  */
-
-  if(
-    !dragState.dragging &&
-    Math.sqrt(
-      dx * dx +
-      dy * dy
-    ) > 12
-  ){
-
-    clearTimeout(
-      dragState.timer
-    );
-
-    dragState.moved =
-      true;
-
-    return;
-
-  }
-
-
-  if(
-    !dragState.dragging
-  ){
-
-    return;
-
-  }
-
-
-  event.preventDefault();
-
-
-  /*
-    Find card under finger.
-  */
-
-  const target =
-    document.elementFromPoint(
-      event.clientX,
-      event.clientY
-    );
-
-
-  const targetCard =
-    target
-      ? target.closest(
-          ".habit-card"
-        )
-      : null;
-
-
-  if(
-    !targetCard ||
-    targetCard ===
-      dragState.card
-  ){
-
-    return;
-
-  }
-
-
-  if(
-    targetCard.parentElement !==
-      habitList
-  ){
-
-    return;
-
-  }
-
-
-  const rect =
-    targetCard.getBoundingClientRect();
-
-
-  const middle =
-    rect.top +
-    rect.height / 2;
-
-
-  if(
-    event.clientY < middle
-  ){
-
-    habitList.insertBefore(
-      dragState.card,
-      targetCard
-    );
-
-  }else{
-
-    habitList.insertBefore(
-      dragState.card,
-      targetCard.nextSibling
-    );
-
-  }
-
-}
-
-
-/* =========================
-   END DRAG
-========================= */
-
-function endDrag(event){
-
-  if(
-    event.pointerId !==
-    dragState.pointerId
-  ){
-
-    return;
-
-  }
-
-
-  clearTimeout(
-    dragState.timer
-  );
-
-
-  if(
-    dragState.dragging
-  ){
-
-    finishDragging();
-
-  }
-
-
-  resetDragState();
-
-}
-
-
-/* =========================
-   CANCEL DRAG
-========================= */
-
-function cancelDrag(event){
-
-  clearTimeout(
-    dragState.timer
-  );
-
-
-  if(
-    dragState.dragging
-  ){
-
-    finishDragging();
-
-  }
-
-
-  resetDragState();
-
-}
-
-
-/* =========================
-   FINISH DRAGGING
-========================= */
-
-function finishDragging(){
-
-  if(!dragState.card){
-
-    return;
-
-  }
-
-
-  /*
-    Read the visual order
-    from the DOM.
-  */
-
-  const cards =
-    Array.from(
-      habitList.querySelectorAll(
-        ".habit-card"
-      )
-    );
-
-
-  const newOrder =
-    [];
-
-
-  cards.forEach(
-    function(card){
-
-      const ha
+$('cancelBtn').onclick=()=>$('overlay').classList.remove('show');
+$('createBtn').onclick=create;
+$('backBtn').onclick=go;
+$('deleteBtn').onclick=del;
+$('overlay').onclick=e=>{if(e.target===$('overlay'))$('overlay').classList.remove('show')};
+$('newHabitName').onkeydown=e=>{if(e.key==='Enter')$('newHabitDays').focus()};
+$('newHabitDays').onkeydown=e=>{if(e.key==='Enter')create()};
+
+load();
+home();
+setTimeout(()=>$('splash').classList.add('hide'),900);
+setTimeout(()=>$('splash').classList.add('hide'),1800);
+if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+})();
+</script>
+</body>
+</html>
